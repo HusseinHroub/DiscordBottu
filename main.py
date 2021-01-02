@@ -1,5 +1,6 @@
 import discord
 import os
+import Commands.CommandsFactory as CommandsFactory
 from keep_alive import keep_alive
 
 
@@ -13,8 +14,18 @@ async def on_ready():
 async def on_message(message):
   if message.author == client.user:
     return
-  if message.content.startswith('!'):
-    await message.channel.send('Hello xD')
+  
+  if message.content.startswith('!l'):
+    try:
+      fullCommand = message.content.split()
+      command = CommandsFactory.getCommand(fullCommand[0], fullCommand[1:])
+      response = command.execute()
+    except Exception as e:
+      response = e
+    if response != '':
+      await message.channel.send(response)
+
+    
 
 
 keep_alive()
