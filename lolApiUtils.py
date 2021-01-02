@@ -19,7 +19,10 @@ def getJsonResponseOfUrl(url):
   return response.json()
 
 def getAccountIdByName(name):
-  return getJsonResponseOfUrl(f'{root_url}/summoner/v4/summoners/by-name/{name}?api_key={api_key}')['accountId']
+  jsonResponse = getJsonResponseOfUrl(f'{root_url}/summoner/v4/summoners/by-name/{name}?api_key={api_key}')
+  if jsonResponse == None:
+    raise Exception(f"Couldn't find summoner with name: {name}")
+  return jsonResponse['accountId']
 
 
 def getMatchesByAccountId(accountId):

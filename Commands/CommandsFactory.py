@@ -1,4 +1,6 @@
 from Commands.RegisterCommand import RegisterCommand
+from Commands.RankCommand import RankCommand
+
 def getCommand(command, commandArgs):
   commandObject = getCommandObject(command, commandArgs)
   if commandObject != None:
@@ -12,6 +14,6 @@ def getCommand(command, commandArgs):
 def getCommandObject(command, commandArgs): 
     switcher = { 
         '!lregister': RegisterCommand(commandArgs), 
-        '!lrank': "one", 
+        '!lrank': RankCommand(commandArgs), 
     }   
     return switcher.get(command, None) 

@@ -1,3 +1,3 @@
 class TotalRankExtractor:
-  def extract(self):
+  def extract(self, accountId):
     return 'not impolemnted yet'

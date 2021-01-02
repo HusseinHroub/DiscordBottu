@@ -1,3 +1,6 @@
 class SimpleRankExtractor:
-  def extract(self):
-    return 'not impolemnted yet'
+   def __init__(self, statType):
+    self.statType = statType
+
+   def extract(self, accountId):
+     dbutils.
