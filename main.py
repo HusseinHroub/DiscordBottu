@@ -2,7 +2,8 @@ import discord
 import os
 import Commands.CommandsFactory as CommandsFactory
 from keep_alive import keep_alive
-
+import shlex
+import traceback
 
 client = discord.Client()
 
@@ -17,11 +18,12 @@ async def on_message(message):
   
   if message.content.startswith('!l'):
     try:
-      fullCommand = message.content.split()
+      fullCommand = shlex.split(message.content)
       command = CommandsFactory.getCommand(fullCommand[0], fullCommand[1:])
       response = command.execute()
     except Exception as e:
-      response = e
+      response = 'Error happened: ' + str(e)
+      traceback.print_exc()
     if response != '':
       await message.channel.send(response)
 

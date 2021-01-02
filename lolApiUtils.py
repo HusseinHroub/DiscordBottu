@@ -12,8 +12,10 @@ CALLS_PERIOD = 60
 @limits(calls=CALLS_NUMBER, period=CALLS_PERIOD)
 def getJsonResponseOfUrl(url):
   response = requests.get(url)
-  if response.status_code != 200:
+  if response.status_code != 200 and response.status_code != 404:
     raise Exception(f'While trying to get url request, got the following response code: {response.status_code}')
+  elif response.status_code == 404:
+    return None
   return response.json()
 
 def getAccountIdByName(name):
