@@ -9,9 +9,6 @@ DB_PASSWORD = os.getenv('DBPASSWORD')
 DB_HOST = os.getenv('DBHOST')
 DB_MAIN_NAME = os.getenv('DBMAINDB')
 
-mydb = mysql.connector.connect(user=DB_USER, password=DB_PASSWORD,
-                              host=DB_HOST,
-                              database=DB_MAIN_NAME)
 class SummonerExistQuery:
   def __init__(self, summonerName):
     self.summonerName = summonerName
@@ -37,20 +34,23 @@ class InsertSummonerQuery:
     mycursor.close()
 
 class GetSummonersOrderedByStatQuery:
-  def __init__(self, stats):
+  def __init__(self, stats, desc):
     self.stats = stats
+    self.desc = desc
 
   def execute(self, mydb):
     mycursor = mydb.cursor()
-    mycursor.execute(f"SELECT {NAME}, {self.stats} FROM {TABLE_NAME} ORDER BY {self.stats} DESC")
+    mycursor.execute(f"SELECT {NAME}, {self.stats} FROM {TABLE_NAME} ORDER BY {self.stats} {'DESC' if self.desc else 'ASC'}")
     data = mycursor.fetchall()
     mycursor.close()
     return data
 
 def connectionWrapper(queryExecutor):
-
+  mydb = mysql.connector.connect(user=DB_USER, password=DB_PASSWORD,
+                              host=DB_HOST,
+                              database=DB_MAIN_NAME)
   response = queryExecutor.execute(mydb)
-  # mydb.close()
+  mydb.close()
   return response
 
 def isSummonerExist(summonerName):
@@ -59,5 +59,5 @@ def isSummonerExist(summonerName):
 def insertSummoner(accountId, summonerName):
   return connectionWrapper(InsertSummonerQuery(accountId, summonerName))
 
-def getSummonerSortedByStat(stats):
-   return connectionWrapper(GetSummonersOrderedByStatQuery(stats))
+def getSummonersSortedByStat(stats, desc):
+   return connectionWrapper(GetSummonersOrderedByStatQuery(stats, desc))

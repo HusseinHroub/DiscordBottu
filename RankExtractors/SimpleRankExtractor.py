@@ -5,7 +5,7 @@ class SimpleRankExtractor:
     self.statType = statType
 
    def extract(self, summonerName):
-     summoners_data = dbutils.getSummonerSortedByStat(self.statType)
+     summoners_data = dbutils.getSummonersSortedByStat(self.statType, self.statType != 'deaths')
      counter = 0
      for summoner_data in summoners_data:
        counter = counter + 1
