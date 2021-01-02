@@ -15,9 +15,9 @@ class SummonerExistQuery:
 
   def execute(self, mydb):
     mycursor = mydb.cursor()
-    mycursor.execute(f"SELECT COUNT(*) FROM {TABLE_NAME} WHERE {NAME} = '{self.summonerName}'")
+    mycursor.execute(f"SELECT {NAME} FROM {TABLE_NAME} WHERE {NAME} = '{self.summonerName}'")
     myresult = mycursor.fetchone()
-    return len(myresult) == 1
+    return myresult != None and len(myresult) == 1
   
 class InsertSummonerQuery:
   def __init__(self, accountId, summonerName):
@@ -30,6 +30,15 @@ class InsertSummonerQuery:
     val = (self.accountId, self.summonerName, 0, 0, 0)
     mycursor.execute(sql, val)
     mydb.commit()
+
+class GetSummonersOrderedByStatQuery:
+  def __init__(self, stats):
+    self.stats = stats
+
+  def execute(self, mydb):
+    mycursor = mydb.cursor()
+    mycursor.execute(f"SELECT {NAME}, {self.stats} FROM {TABLE_NAME} ORDER BY {self.stats} DESC")
+    return mycursor.fetchall()
 
 def connectionWrapper(queryExecutor):
   mydb = mysql.connector.connect(user=DB_USER, password=DB_PASSWORD,
@@ -44,3 +53,6 @@ def isSummonerExist(summonerName):
 
 def insertSummoner(accountId, summonerName):
   return connectionWrapper(InsertSummonerQuery(accountId, summonerName))
+
+def getSummonerSortedByStat(stats):
+   return connectionWrapper(GetSummonersOrderedByStatQuery(stats))

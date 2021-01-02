@@ -24,11 +24,8 @@ async def on_message(message):
     except Exception as e:
       response = 'Error happened: ' + str(e)
       traceback.print_exc()
-    if response != '':
+    if response != None and response != '':
       await message.channel.send(response)
-
-    
-
 
 keep_alive()
 client.run(os.getenv('CTOKEN'))
