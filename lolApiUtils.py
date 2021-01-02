@@ -7,7 +7,7 @@ root_url = f'https://{region}.api.riotgames.com/lol'
 
 CALLS_NUMBER = 50
 CALLS_PERIOD = 60
-# //test
+
 @sleep_and_retry
 @limits(calls=CALLS_NUMBER, period=CALLS_PERIOD)
 def getJsonResponseOfUrl(url):
