@@ -14,10 +14,9 @@ class RankCommand:
     summonerName = self.commandArgs[0]
     stats = 'kills' if len(self.commandArgs) == 1 else self.commandArgs[1]
     rankExtractor = self.getRankExtractor(stats)
-    accountId = dbutils.getSummonerValue(summonerName)
-    if accountId == None:
+    if not dbutils.isSummonerExist(summonerName):
       return f"It seems this summoner name {summonerName} is not registerred, please register this summoner first using this command\n!lregister \"{summonerName}\""
-    return rankExtractor.extract(accountId)
+    return rankExtractor.extract(summonerName)
     
 
   def getHelpMessage(self):

@@ -1,30 +1,46 @@
-from replit import db
-SUMMONER_PREFIX = '[Sum[Col'
-ACCOUNT_PREFIX = '[Acc[id'
+import mysql.connector
+import os
+TABLE_NAME = 'SummonerData'
+ACCOUNT_ID = 'accountId'
+NAME = 'name'
 
-def getSummonerValue(summonerName):
-  return getValue(SUMMONER_PREFIX + summonerName)
+DB_USER = os.getenv('DBUSER')
+DB_PASSWORD = os.getenv('DBPASSWORD')
+DB_HOST = os.getenv('DBHOST')
+DB_MAIN_NAME = os.getenv('DBMAINDB')
 
-def getAccountValue(account_id):
-  return getValue(ACCOUNT_PREFIX + account_id)
+class SummonerExistQuery:
+  def __init__(self, summonerName):
+    self.summonerName = summonerName
 
-def setSummonerValue(summonerName, account_id):
-  setValue(SUMMONER_PREFIX + summonerName, account_id)
+  def execute(self, mydb):
+    mycursor = mydb.cursor()
+    mycursor.execute(f"SELECT COUNT(*) FROM {TABLE_NAME} WHERE {NAME} = '{self.summonerName}'")
+    myresult = mycursor.fetchone()
+    return len(myresult) == 1
+  
+class InsertSummonerQuery:
+  def __init__(self, accountId, summonerName):
+    self.accountId = accountId
+    self.summonerName = summonerName
 
-def setAccountValue(account_id, value):
-  setValue(ACCOUNT_PREFIX + account_id, value)
+  def execute(self, mydb):
+    mycursor = mydb.cursor()
+    sql = f"INSERT INTO {TABLE_NAME} VALUES (%s, %s, %s, %s, %s)"
+    val = (self.accountId, self.summonerName, 0, 0, 0)
+    mycursor.execute(sql, val)
+    mydb.commit()
 
-def getValue(key):
-  try:
-    return db[key]
-  except KeyError:
-    return None
+def connectionWrapper(queryExecutor):
+  mydb = mysql.connector.connect(user=DB_USER, password=DB_PASSWORD,
+                              host=DB_HOST,
+                              database=DB_MAIN_NAME)
+  response = queryExecutor.execute(mydb)
+  mydb.close()
+  return response
 
-def setValue(key, value):
-  db[key] = value
+def isSummonerExist(summonerName):
+  return connectionWrapper(SummonerExistQuery(summonerName))
 
-def deleteKey(key):
-  del db[key]
-
-
-
+def insertSummoner(accountId, summonerName):
+  return connectionWrapper(InsertSummonerQuery(accountId, summonerName))

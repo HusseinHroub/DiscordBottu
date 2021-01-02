@@ -3,4 +3,4 @@ class SimpleRankExtractor:
     self.statType = statType
 
    def extract(self, accountId):
-     dbutils.
+     print('not yet valid')
