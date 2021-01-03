@@ -17,7 +17,7 @@ class RegisterCommand:
     return f'Succefully registered {summonerName} in bot database'
   
   def getStatsAndLastGameTimeStamp(self, accountId):
-    matches = lolApiUtils.getMatchesByAccountId(accountId, 1609440853582)
+    matches = lolApiUtils.getMatchesByAccountId(accountId)
     kills = 0
     deaths = 0
     assists = 0
