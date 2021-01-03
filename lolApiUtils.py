@@ -11,7 +11,6 @@ root_url = f'https://{region}.api.riotgames.com/lol'
 CALLS_NUMBER = 95
 CALLS_PERIOD = 120
 
-threadCounterCalls = 0
 @sleep_and_retry
 @limits(calls=CALLS_NUMBER, period=CALLS_PERIOD)
 def getJsonResponseOfUrl(url):
@@ -20,9 +19,6 @@ def getJsonResponseOfUrl(url):
 @sleep_and_retry
 @limits(calls=15, period=1)
 def doGetJsonResponseOfUrl(url):
-  global threadCounterCalls
-  threadCounterCalls += 1
-  print(f"threadCounterCalls: {threadCounterCalls}")
   response = requests.get(url)
   if response.status_code != 200 and response.status_code != 404:
     raise Exception(f'While trying to get url request, got the following response code: {response.status_code}')
@@ -62,7 +58,6 @@ def getStatsOfGameId(gameId, accountId):
     return 0
 
 def getTotalStatsOfMatches(matches, accountId):
-  print(len(matches))
   q = Queue(maxsize=0)
   num_theads = min(30, len(matches))
   results = [(0, 0, 0) for x in matches];
