@@ -8,13 +8,18 @@ region = 'euw1'
 api_key = os.getenv('LAPIKEY')
 root_url = f'https://{region}.api.riotgames.com/lol'
 
-CALLS_NUMBER = 100
+CALLS_NUMBER = 95
 CALLS_PERIOD = 120
 
 threadCounterCalls = 0
 @sleep_and_retry
 @limits(calls=CALLS_NUMBER, period=CALLS_PERIOD)
 def getJsonResponseOfUrl(url):
+  return doGetJsonResponseOfUrl(url)
+
+@sleep_and_retry
+@limits(calls=15, period=1)
+def doGetJsonResponseOfUrl(url):
   global threadCounterCalls
   threadCounterCalls += 1
   print(f"threadCounterCalls: {threadCounterCalls}")
@@ -33,7 +38,7 @@ def getAccountIdByName(name):
 
 
 def getMatchesByAccountId(accountId, beginTime=0):
-  jsonResponse = getJsonResponseOfUrl(f'{root_url}/match/v4/matchlists/by-account/{accountId}?api_key={api_key}&beginTime={beginTime}')
+  jsonResponse = getJsonResponseOfUrl(f'{root_url}/match/v4/matchlists/by-account/{accountId}?api_key={api_key}&beginTime={beginTime}&endIndex=30')
   return None if jsonResponse == None else jsonResponse['matches']
   
     
@@ -57,12 +62,10 @@ def getStatsOfGameId(gameId, accountId):
     return 0
 
 def getTotalStatsOfMatches(matches, accountId):
-  print('started working bro')
-  print('matches length')
   print(len(matches))
   q = Queue(maxsize=0)
-  num_theads = min(3, len(matches))
-  results = [{} for x in matches];
+  num_theads = min(30, len(matches))
+  results = [(0, 0, 0) for x in matches];
   for i in range(len(matches)):
     q.put((i,matches[i]['gameId']))
   threads = []
@@ -70,10 +73,8 @@ def getTotalStatsOfMatches(matches, accountId):
     worker = Thread(target=getTotalStatsOfMatchesWorker, args=(q,accountId, results))
     threads.append(worker)
     worker.start()
-  print('before join')
   for worker in threads:
     worker.join()
-  print('after join')
   total_kills = 0
   total_deaths = 0
   total_assists = 0
@@ -81,7 +82,6 @@ def getTotalStatsOfMatches(matches, accountId):
     total_kills += result[0]
     total_deaths += result[1]
     total_assists += result[2]
-  print('finished working bro')
   return total_kills, total_deaths, total_assists
   
 def getTotalStatsOfMatchesWorker(queue, accountId, results):
