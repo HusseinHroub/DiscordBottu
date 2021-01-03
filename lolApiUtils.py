@@ -25,8 +25,9 @@ def getAccountIdByName(name):
   return jsonResponse['accountId']
 
 
-def getMatchesByAccountId(accountId):
-  return getJsonResponseOfUrl(f'{root_url}/match/v4/matchlists/by-account/{accountId}?api_key={api_key}')['matches']
+def getMatchesByAccountId(accountId, beginTime=0):
+  jsonResponse = getJsonResponseOfUrl(f'{root_url}/match/v4/matchlists/by-account/{accountId}?api_key={api_key}&beginTime={beginTime}')
+  return None if jsonResponse == None else jsonResponse['matches']
   
     
 
@@ -38,17 +39,24 @@ def getParticpantIdOfGameDetails(match_details, accountId):
   return -1
 
 
-def getKillsOfGameId(gameId, accountId):
+def getStatsOfGameId(gameId, accountId):
   match_details = getJsonResponseOfUrl(f'{root_url}/match/v4/matches/{gameId}?api_key={api_key}')
   particpantId = getParticpantIdOfGameDetails(match_details, accountId)
   if particpantId != -1:
-    return match_details['participants'][particpantId - 1]['stats']['kills']
+    stats =match_details['participants'][particpantId - 1]['stats'] 
+    return stats['kills'], stats['deaths'], stats['assists']
   else:
     print(f'warning cloudnt find particpantId of gameId: {gameId}')
     return 0
 
-def getTotalKillsOfMatches(matches, accountId):
+def getTotalStatsOfMatches(matches, accountId):
   total_kills = 0
+  total_deaths = 0
+  total_assists = 0
   for match in matches:
-    total_kills += getKillsOfGameId(match["gameId"], accountId)
-  return total_kills
+    kills, deaths, assists = getStatsOfGameId(match["gameId"], accountId)
+    total_kills += kills
+    total_deaths += deaths
+    total_assists += assists
+  return total_kills, total_deaths, total_assists
+  

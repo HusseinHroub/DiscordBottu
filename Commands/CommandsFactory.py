@@ -7,10 +7,7 @@ def getCommand(command, commandArgs):
   if commandObject != None:
     return commandObject
   else:
-    raise Exception(f"Command {command} doesn't exist")
-
-
-
+    raise Exception(f"Command {command} doesn't exist, {getHelpMessage()}")
 
 def getCommandObject(command, commandArgs): 
     switcher = { 
@@ -19,3 +16,6 @@ def getCommandObject(command, commandArgs):
         '!ltop': TopCommand(commandArgs),
     }   
     return switcher.get(command, None) 
+
+def getHelpMessage():
+  return 'avaiable commands to use:\n!lrank "Summoner Name" [kills, deaths, assists, total]\n!ltop [kills, deaths, assists, total]\n!lregister "Summoner Name"'

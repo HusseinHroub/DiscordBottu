@@ -21,14 +21,18 @@ class SummonerExistQuery:
     return myresult != None and len(myresult) == 1
   
 class InsertSummonerQuery:
-  def __init__(self, accountId, summonerName):
+  def __init__(self, accountId, summonerName, kills, deaths, assists, lastGameTimeStamp):
     self.accountId = accountId
     self.summonerName = summonerName
+    self.kills = kills
+    self.deaths = deaths
+    self.assists = assists
+    self.lastGameTimeStamp = lastGameTimeStamp
 
   def execute(self, mydb):
     mycursor = mydb.cursor()
-    sql = f"INSERT INTO {TABLE_NAME} VALUES (%s, %s, %s, %s, %s)"
-    val = (self.accountId, self.summonerName, 0, 0, 0)
+    sql = f"INSERT INTO {TABLE_NAME} VALUES (%s, %s, %s, %s, %s, %s)"
+    val = (self.accountId, self.summonerName, self.kills, self.deaths, self.assists, self.lastGameTimeStamp)
     mycursor.execute(sql, val)
     mydb.commit()
     mycursor.close()
@@ -56,8 +60,8 @@ def connectionWrapper(queryExecutor):
 def isSummonerExist(summonerName):
   return connectionWrapper(SummonerExistQuery(summonerName))
 
-def insertSummoner(accountId, summonerName):
-  return connectionWrapper(InsertSummonerQuery(accountId, summonerName))
+def insertSummoner(accountId, summonerName, kills, deaths, assists, lastGameTimeStamp):
+  return connectionWrapper(InsertSummonerQuery(accountId, summonerName, kills, deaths, assists, lastGameTimeStamp))
 
 def getSummonersSortedByStat(stats, desc):
    return connectionWrapper(GetSummonersOrderedByStatQuery(stats, desc))
