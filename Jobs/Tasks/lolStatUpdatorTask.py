@@ -45,9 +45,9 @@ def getTotalStatsOfSummonerWorker(queue, results):
 def getNewSummonerData(summonersData, results):
   newSummonersData = []
   for i in range(len(summonersData)):
-    if(results[i][0] == 0 and results[i][1] == 0 and results[i][2] == 0):
-      continue
     result = results[i]
+    if(result['kills'] == 0 and result['deaths'] == 0 and result['assists'] == 0):
+      continue
     summonerData = summonersData[i]
     newSummonersData.append({
       'kills': result['kills'] + summonerData[1],

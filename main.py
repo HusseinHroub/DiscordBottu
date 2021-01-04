@@ -4,7 +4,7 @@ import Commands.CommandsFactory as CommandsFactory
 from keep_alive import keep_alive
 import shlex
 import traceback
-
+from Jobs import statsUpdatorJob
 client = discord.Client()
 
 def stringStringArray(stringArray):
@@ -34,3 +34,4 @@ async def on_message(message):
 
 keep_alive()
 client.run(os.getenv('CTOKEN'))
+statsUpdatorJob.start()
