@@ -42,7 +42,7 @@ def getMatchesByAccountId(accountId, beginTime=0):
 def getParticpantIdOfGameDetails(match_details, accountId):
   participantIdentities = match_details['participantIdentities']
   for participantIdentity in participantIdentities:
-    if participantIdentity['player']['accountId'] == accountId:
+    if participantIdentity['player']['currentAccountId'] == accountId:
       return participantIdentity['participantId']
   return -1
 
