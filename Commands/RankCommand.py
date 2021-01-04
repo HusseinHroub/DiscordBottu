@@ -1,4 +1,3 @@
-import lolApiUtils
 import dbutils
 from RankExtractors.SimpleRankExtractor import SimpleRankExtractor
 from RankExtractors.TotalRankExtractor import TotalRankExtractor

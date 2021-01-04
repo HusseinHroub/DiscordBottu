@@ -1,4 +1,4 @@
-import lolApiUtils
+from lolutils import lolApiUtils
 import dbutils
 import time
 

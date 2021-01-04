@@ -1,8 +1,7 @@
 import requests
 import os
 from ratelimit import limits, sleep_and_retry
-from queue import Queue
-from threading import Thread
+from lolutils import lolGamesStats
 
 region = 'euw1'
 api_key = os.getenv('LAPIKEY')
@@ -58,29 +57,6 @@ def getStatsOfGameId(gameId, accountId):
     return 0
 
 def getTotalStatsOfMatches(matches, accountId):
-  q = Queue(maxsize=0)
-  num_theads = min(30, len(matches))
-  results = [(0, 0, 0) for x in matches];
-  for i in range(len(matches)):
-    q.put((i,matches[i]['gameId']))
-  threads = []
-  for i in range(num_theads):
-    worker = Thread(target=getTotalStatsOfMatchesWorker, args=(q,accountId, results))
-    threads.append(worker)
-    worker.start()
-  for worker in threads:
-    worker.join()
-  total_kills = 0
-  total_deaths = 0
-  total_assists = 0
-  for result in results:
-    total_kills += result[0]
-    total_deaths += result[1]
-    total_assists += result[2]
-  return total_kills, total_deaths, total_assists
-  
-def getTotalStatsOfMatchesWorker(queue, accountId, results):
-  while not queue.empty():
-    work = queue.get()
-    kills, deaths, assists = getStatsOfGameId(work[1], accountId)
-    results[work[0]]=(kills, deaths, assists)
+  results = lolGamesStats.getStatResultsFromWorkerThreads(matches, accountId)
+  return lolGamesStats.calculateMergedStatsResults(results)
+ 
