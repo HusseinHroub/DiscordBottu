@@ -3,6 +3,11 @@ import os
 TABLE_NAME = 'SummonerData'
 ACCOUNT_ID = 'accountId'
 NAME = 'name'
+KILLS = 'kills'
+DEATHS = 'deaths'
+ASSISTS = 'assists'
+LAST_GAME_TIME_STAMP = 'lastGameTimeStamp'
+
 
 DB_USER = os.getenv('DBUSER')
 DB_PASSWORD = os.getenv('DBPASSWORD')
@@ -49,6 +54,28 @@ class GetSummonersOrderedByStatQuery:
     mycursor.close()
     return data
 
+class GetAllSummonerDataQuery:
+  def execute(self, mydb):
+    mycursor = mydb.cursor()
+    mycursor.execute(f"SELECT {ACCOUNT_ID}, {KILLS}, {DEATHS}, {ASSISTS}, {LAST_GAME_TIME_STAMP} FROM {TABLE_NAME}")
+    data = mycursor.fetchall()
+    mycursor.close()
+    return data
+
+class UpdateSummonersDataQuery:
+  def __init__(self, summonersData):
+   self.summonersData = summonersData
+
+  def execute(self, mydb):
+    mycursor = mydb.cursor()
+    sql = f"UPDATE {TABLE_NAME} SET {KILLS} = %s, {DEATHS} = %s, {ASSISTS} = %s WHERE {ACCOUNT_ID} = %s"
+    values = []
+    for summonerData in self.summonersData:
+      values.append((summonerData['kills'], summonerData['deaths'], summonerData['assists'], summonerData['accountId']))
+    mycursor.executemany(sql, values)
+    mydb.commit()
+    mycursor.close()
+
 def connectionWrapper(queryExecutor):
   mydb = mysql.connector.connect(user=DB_USER, password=DB_PASSWORD,
                               host=DB_HOST,
@@ -65,3 +92,9 @@ def insertSummoner(accountId, summonerName, kills, deaths, assists, lastGameTime
 
 def getSummonersSortedByStat(stats, desc):
    return connectionWrapper(GetSummonersOrderedByStatQuery(stats, desc))
+
+def getAllSummonerData():
+  return connectionWrapper(GetAllSummonerDataQuery())
+
+def updateSummonersData(summonersData):
+  return connectionWrapper(UpdateSummonersDataQuery(summonersData))

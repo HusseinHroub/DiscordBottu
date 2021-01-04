@@ -1,6 +1,7 @@
 from Commands.RegisterCommand import RegisterCommand
 from Commands.RankCommand import RankCommand
 from Commands.TopCommand import TopCommand
+from Commands.TempCommand import TempCommand
 
 def getCommand(command, commandArgs):
   commandObject = getCommandObject(command, commandArgs)
@@ -14,6 +15,7 @@ def getCommandObject(command, commandArgs):
         '!lregister': RegisterCommand(commandArgs), 
         '!lrank': RankCommand(commandArgs), 
         '!ltop': TopCommand(commandArgs),
+        '!lhasonspec': TempCommand(commandArgs)
     }   
     return switcher.get(command, None) 
 
