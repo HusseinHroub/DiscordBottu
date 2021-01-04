@@ -12,10 +12,14 @@ def start():
   thread.start()
 
 def doStart():
+  print('in do Start()')
+  global isStarted
   if isStarted:
     raise Exception("Couldn't start updator job as its already in process")
+  isStarted = True
   while True:
     try:
+      print('started sleep')
       time.sleep(sleepAmount)
       print('started job!')
       lolStatUpdatorTask.updateDBStats()

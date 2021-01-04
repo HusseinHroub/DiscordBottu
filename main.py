@@ -33,5 +33,5 @@ async def on_message(message):
       await message.channel.send(response)
 
 keep_alive()
-client.run(os.getenv('CTOKEN'))
 statsUpdatorJob.start()
+client.run(os.getenv('CTOKEN'))
