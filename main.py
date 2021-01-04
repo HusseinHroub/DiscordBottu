@@ -7,6 +7,10 @@ import traceback
 
 client = discord.Client()
 
+def stringStringArray(stringArray):
+  for i in range (len(stringArray)):
+        stringArray[i] = stringArray[i].strip()
+
 @client.event
 async def on_ready():
   print('Hello bot is ready')
@@ -19,6 +23,7 @@ async def on_message(message):
   if message.content.startswith('!l'):
     try:
       fullCommand = shlex.split(message.content)
+      stringStringArray(fullCommand)
       command = CommandsFactory.getCommand(fullCommand[0], fullCommand[1:])
       response = command.execute()
     except Exception as e:
