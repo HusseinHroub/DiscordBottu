@@ -68,10 +68,10 @@ class UpdateSummonersDataQuery:
 
   def execute(self, mydb):
     mycursor = mydb.cursor()
-    sql = f"UPDATE {TABLE_NAME} SET {KILLS} = %s, {DEATHS} = %s, {ASSISTS} = %s WHERE {ACCOUNT_ID} = %s"
+    sql = f"UPDATE {TABLE_NAME} SET {KILLS} = %s, {DEATHS} = %s, {ASSISTS} = %s , {LAST_GAME_TIME_STAMP} = %s WHERE {ACCOUNT_ID} = %s"
     values = []
     for summonerData in self.summonersData:
-      values.append((summonerData['kills'], summonerData['deaths'], summonerData['assists'], summonerData['accountId']))
+      values.append((summonerData['kills'], summonerData['deaths'], summonerData['assists'], summonerData['lastGameTimeStamp'], summonerData['accountId']))
     mycursor.executemany(sql, values)
     mydb.commit()
     mycursor.close()

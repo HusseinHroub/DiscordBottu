@@ -18,6 +18,7 @@ def getJsonResponseOfUrl(url):
 @sleep_and_retry
 @limits(calls=15, period=1)
 def doGetJsonResponseOfUrl(url):
+  print(url)
   response = requests.get(url)
   if response.status_code != 200 and response.status_code != 404:
     raise Exception(f'While trying to get url request, got the following response code: {response.status_code}')

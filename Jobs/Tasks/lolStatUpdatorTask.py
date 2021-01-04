@@ -2,6 +2,7 @@ import dbutils
 from lolutils import lolApiUtils
 from queue import Queue
 from threading import Thread
+import time
 
 def updateDBStats():
   summonersData = dbutils.getAllSummonerData()
@@ -31,25 +32,29 @@ def getTotalStatsOfSummonerWorker(queue, results):
   while not queue.empty():
     work = queue.get()
     summonerData = work[1]
-    results[work[0]]={'kills': 0, 'deaths': 0, 'assists': 0, 'accountId': summonerData[0]}
-    games = lolApiUtils.getMatchesByAccountId(summonerData[0], summonerData[4])
-    if games != None and len(games) > 0:
-      kills, deaths, assists = lolApiUtils.getTotalStatsOfMatches(games, summonerData[0])
+    results[work[0]]={'kills': 0, 'deaths': 0, 'assists': 0, 'accountId': summonerData[0], 'lastGameTimeStamp': time.time()}
+    matches = lolApiUtils.getMatchesByAccountId(summonerData[0], summonerData[4])
+    if matches != None and len(matches) > 0:
+      kills, deaths, assists = lolApiUtils.getTotalStatsOfMatches(matches, summonerData[0])
       result = results[work[0]]
       result['kills'] = kills
       result['deaths'] = deaths
       result['assists'] = assists
+      result['lastGameTimeStamp'] = matches[0]['timestamp'] + 1
     
 def getNewSummonerData(summonersData, results):
   newSummonersData = []
-  for i in (len(summonersData)):
+  for i in range(len(summonersData)):
     if(results[i][0] == 0 and results[i][1] == 0 and results[i][2] == 0):
       continue
+    result = results[i]
+    summonerData = summonersData[i]
     newSummonersData.append({
-      'kills': results[i]['kills'] + summonersData[i][1],
-      'deaths': results[i]['deaths'] + summonersData[i][2],
-      'assists': results[i]['deaths'] + summonersData[i][3],
-      'accountId': results[i]['accountId']
+      'kills': result['kills'] + summonerData[1],
+      'deaths': result['deaths'] + summonerData[2],
+      'assists': result['assists'] + summonerData[3],
+      'accountId': result['accountId'],
+      'lastGameTimeStamp': result['lastGameTimeStamp']
     })
   return newSummonersData
   
