@@ -20,9 +20,10 @@ async def on_message(message):
   if message.author == client.user:
     return
   
-  if message.content.startswith('!l'):
+  messageContent = message.content.lower()
+  if messageContent.startswith('!l'):
     try:
-      fullCommand = shlex.split(message.content)
+      fullCommand = shlex.split(messageContent)
       stringStringArray(fullCommand)
       command = CommandsFactory.getCommand(fullCommand[0], fullCommand[1:])
       response = command.execute()
