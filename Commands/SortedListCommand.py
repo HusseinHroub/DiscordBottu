@@ -9,8 +9,13 @@ class SortedListCommand:
     return self.getTopListExtractor(stats).extract()    
  
   def getHelpMessage(self):
-    return f'\nHere is an example on how to use this command\n{self.modeType} [this will get top list based on kills count] \n\n**You also can use one of the followings as valid commands:\n1- {self.modeType} kills [this will get the top list based on kills count]\n2- {self.modeType} deaths [this will get the top list baed on minimum deaths count]\n3- {self.modeType} assists [this will get the top list based on assists count]\n4- {self.modeType} total [This will merge kills and deaths and assists, and return the global top list]'
+    sortType = self.getType()
+
+    return f'\nHere is an example on how to use this command\n{self.modeType} [this will get {sortType} list based on kills count] \n\n**You also can use one of the followings as valid commands:\n1- {self.modeType} kills [this will get the {sortType} list based on kills count]\n2- {self.modeType} deaths [this will get the {sortType} list baed on {"minimum" if sortType == "top" else "maximum"} deaths count]\n3- {self.modeType} assists [this will get the {sortType} list based on assists count]\n4- {self.modeType} total [This will merge kills and deaths and assists, and return the global {sortType} list]'
   
+  def getType(self):
+    return 'top' if self.modeType == '!ltop' else 'worst'
+
   def getTopListExtractor(self, stats):
     modeType = ModeTypes.top if self.modeType == '!ltop' else ModeTypes.worst
     topListExtractors = {
