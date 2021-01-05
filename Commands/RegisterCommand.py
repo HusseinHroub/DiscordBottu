@@ -13,8 +13,11 @@ class RegisterCommand:
     if dbutils.isSummonerExist(summonerName):
       return f"Already have registerred summoner with name {summonerName}"
     accountId = lolApiUtils.getAccountIdByName(summonerName)
+    if(dbutils.isAccountIdExist(accountId)):
+      dbutils.updateSummonerByAccountId(accountId = accountId, summonerName = summonerName)
+      return f'Summoner is already registerred with old name, updated to the new provided name: {summonerName}'
     dbutils.insertSummoner(accountId, summonerName, *self.getStatsAndLastGameTimeStamp(accountId))
-    return f'Succefully registered {summonerName} in bot database'
+    return f'Successfully registered {summonerName} in bot database'
   
   def getStatsAndLastGameTimeStamp(self, accountId):
     matches = lolApiUtils.getMatchesByAccountId(accountId)

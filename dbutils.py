@@ -25,6 +25,17 @@ class SummonerExistQuery:
     mycursor.close()
     return myresult != None and len(myresult) == 1
   
+class AccountIdExistQuery:
+  def __init__(self, accountId):
+    self.accountId = accountId
+
+  def execute(self, mydb):
+    mycursor = mydb.cursor()
+    mycursor.execute(f"SELECT {ACCOUNT_ID} FROM {TABLE_NAME} WHERE {ACCOUNT_ID} = '{self.accountId}'")
+    myresult = mycursor.fetchone()
+    mycursor.close()
+    return myresult != None and len(myresult) == 1
+
 class InsertSummonerQuery:
   def __init__(self, accountId, summonerName, kills, deaths, assists, lastGameTimeStamp):
     self.accountId = accountId
@@ -76,6 +87,19 @@ class UpdateSummonersDataQuery:
     mydb.commit()
     mycursor.close()
 
+class UpdateSummonerByAccountIdQuery:
+  def __init__(self, accountId, summonerName):
+   self.accountId = accountId
+   self.summonerName = summonerName
+
+  def execute(self, mydb):
+    mycursor = mydb.cursor()
+    sql = f"UPDATE {TABLE_NAME} SET {NAME} = %s WHERE {ACCOUNT_ID} = %s"
+    val = (self.summonerName, self.accountId)
+    mycursor.execute(sql, val)
+    mydb.commit()
+    mycursor.close()
+
 def connectionWrapper(queryExecutor):
   mydb = mysql.connector.connect(user=DB_USER, password=DB_PASSWORD,
                               host=DB_HOST,
@@ -87,6 +111,9 @@ def connectionWrapper(queryExecutor):
 def isSummonerExist(summonerName):
   return connectionWrapper(SummonerExistQuery(summonerName))
 
+def isAccountIdExist(accountId):
+  return connectionWrapper(AccountIdExistQuery(accountId))
+
 def insertSummoner(accountId, summonerName, kills, deaths, assists, lastGameTimeStamp):
   return connectionWrapper(InsertSummonerQuery(accountId, summonerName, kills, deaths, assists, lastGameTimeStamp))
 
@@ -96,5 +123,8 @@ def getSummonersSortedByStat(stats, desc):
 def getAllSummonerData():
   return connectionWrapper(GetAllSummonerDataQuery())
 
+def updateSummonerByAccountId(accountId, summonerName = None):
+  return connectionWrapper(UpdateSummonerByAccountIdQuery(accountId, summonerName))
+  
 def updateSummonersData(summonersData):
   return connectionWrapper(UpdateSummonersDataQuery(summonersData))
