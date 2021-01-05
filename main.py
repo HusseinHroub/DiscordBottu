@@ -19,9 +19,9 @@ async def on_ready():
 async def on_message(message):
   if message.author == client.user:
     return
-  
-  messageContent = message.content.lower()
-  if messageContent.startswith('!l'):
+   
+  messageContent = message.content
+  if messageContent.startswith('!l') or messageContent.startswith('!L'):
     try:
       fullCommand = shlex.split(messageContent)
       stringStringArray(fullCommand)

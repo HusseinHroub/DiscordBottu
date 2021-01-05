@@ -20,7 +20,7 @@ class SummonerExistQuery:
 
   def execute(self, mydb):
     mycursor = mydb.cursor()
-    mycursor.execute(f"SELECT {NAME} FROM {TABLE_NAME} WHERE {NAME} = '{self.summonerName}'")
+    mycursor.execute(f"SELECT {NAME} FROM {TABLE_NAME} WHERE LOWER({NAME}) = '{self.summonerName}'")
     myresult = mycursor.fetchone()
     mycursor.close()
     return myresult != None and len(myresult) == 1
@@ -47,7 +47,7 @@ class InsertSummonerQuery:
 
   def execute(self, mydb):
     mycursor = mydb.cursor()
-    sql = f"INSERT INTO {TABLE_NAME} VALUES (%s, %s, %s, %s, %s, %s)"
+    sql = f"INSERT INTO {TABLE_NAME} ({ACCOUNT_ID}, {NAME}, {KILLS}, {DEATHS}, {ASSISTS}, {LAST_GAME_TIME_STAMP}) VALUES (%s, %s, %s, %s, %s, %s)"
     val = (self.accountId, self.summonerName, self.kills, self.deaths, self.assists, self.lastGameTimeStamp)
     mycursor.execute(sql, val)
     mydb.commit()

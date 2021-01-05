@@ -4,6 +4,7 @@ from Commands.SortedListCommand import SortedListCommand
 from Commands.TempCommand import TempCommand
 
 def getCommand(command, commandArgs):
+  command = command.lower()
   commandObject = getCommandObject(command, commandArgs)
   if commandObject != None:
     return commandObject
@@ -11,12 +12,13 @@ def getCommand(command, commandArgs):
     raise Exception(f"Command {command} doesn't exist, {getHelpMessage()}")
 
 def getCommandObject(command, commandArgs): 
+    lowerCommandVersionArgs = [str.lower() for str in commandArgs]
     switcher = { 
         '!lregister': RegisterCommand(commandArgs), 
-        '!lrank': RankCommand(commandArgs), 
-        '!ltop': SortedListCommand(command, commandArgs),
-        '!lworst': SortedListCommand(command, commandArgs),
-        '!lhasonspec': TempCommand(commandArgs)
+        '!lrank': RankCommand(lowerCommandVersionArgs), 
+        '!ltop': SortedListCommand(command, lowerCommandVersionArgs),
+        '!lworst': SortedListCommand(command, lowerCommandVersionArgs),
+        '!lhasonspec': TempCommand(lowerCommandVersionArgs)
     }   
     return switcher.get(command, None) 
 
