@@ -1,7 +1,5 @@
 import dbutils
 from RankExtractors.SimpleRankExtractor import SimpleRankExtractor
-from RankExtractors.TotalRankExtractor import TotalRankExtractor
-
 
 class RankCommand:
   def __init__(self, commandArgs):

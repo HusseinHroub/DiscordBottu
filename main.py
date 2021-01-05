@@ -26,13 +26,14 @@ async def on_message(message):
       fullCommand = shlex.split(messageContent)
       stringStringArray(fullCommand)
       command = CommandsFactory.getCommand(fullCommand[0], fullCommand[1:])
-      response = command.execute()
+      embedDescrption = command.execute()
     except Exception as e:
-      response = 'Error happened: ' + str(e)
+      embedDescrption = 'Error happened: ' + str(e)
       traceback.print_exc()
-    if response != None and response != '':
-      await message.channel.send(response)
-
+    if embedDescrption != None and embedDescrption != '':
+      embed=discord.Embed(description=embedDescrption, color=0x27966b)
+      await message.channel.send(embed=embed)
+  
 keep_alive()
 statsUpdatorJob.start()
 client.run(os.getenv('CTOKEN'))
