@@ -7,11 +7,8 @@ import sotrageutils
 
 def updateDBStats():
   summonersData = dbutils.getAllSummonerData()
-  print('got summoners data')
   results = getSummonersStats(summonersData)
-  print('got summoners results')
   newSummonersData = getNewSummonerData(summonersData, results)
-  print('merged results')
   updateToDBIfNotEmptyData(newSummonersData)
 
 def getSummonersStats(summonersData):
