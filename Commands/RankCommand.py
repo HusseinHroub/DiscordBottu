@@ -24,7 +24,7 @@ class RankCommand:
       'kills': SimpleRankExtractor('kills'),
       'deaths': SimpleRankExtractor('deaths'),
       'assists': SimpleRankExtractor('assists'),
-      'total': SimpleRankExtractor('total')
+      'kda': SimpleRankExtractor('kda')
     }
     
     rankExtractorObject = rankExtractors.get(stats, None)

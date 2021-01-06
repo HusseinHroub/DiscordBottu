@@ -5,6 +5,7 @@ from keep_alive import keep_alive
 import shlex
 import traceback
 from Jobs import statsUpdatorJob
+import sotrageutils
 client = discord.Client()
 
 def stringStringArray(stringArray):
@@ -35,5 +36,6 @@ async def on_message(message):
       await message.channel.send(embed=embed)
   
 keep_alive()
+sotrageutils.updateCache()
 statsUpdatorJob.start()
 client.run(os.getenv('CTOKEN'))

@@ -1,5 +1,5 @@
-import dbutils
 import enum
+import cacheutils
 
 class ModeTypes(enum.Enum):
   top = 0
@@ -11,16 +11,25 @@ class SimpleSortedListExtractor:
     self.statType = statType
 
    def extract(self):
-     summoners_data = dbutils.getSummonersSortedByStat(self.statType, self.getSortingOrder())
+     summoners_data = cacheutils.getSummonersSortedByStat(self.statType)
      response = ''
      counter = 1
-     for summoner_data in summoners_data:
-       response = response + f'{counter}- {summoner_data[0]} with {summoner_data[1]} {self.statType}\n\n'
+     if self.isDesc():
+      for summoner_data in summoners_data:
+        response = response + self.getFormattedResponse(counter, summoner_data)
+        counter = counter + 1
+     else:
+      for i in range(len(summoners_data),0,-1):
+       summoner_data = summoners_data[i-1]
+       response = response + self.getFormattedResponse(counter, summoner_data)
        counter = counter + 1
      return response
 
-
-   def getSortingOrder(self):
+   
+   def getFormattedResponse(self, counter, summoner_data):
+     return f'{counter}- {summoner_data[0]} with {summoner_data[1]} {self.statType}\n\n'
+  
+   def isDesc(self):
      if self.modeType == ModeTypes.top:
        return self.statType != 'deaths'
      else:

@@ -22,7 +22,7 @@ class SortedListCommand:
       'kills': SimpleSortedListExtractor(modeType, 'kills'),
       'deaths': SimpleSortedListExtractor(modeType, 'deaths'),
       'assists': SimpleSortedListExtractor(modeType, 'assists'),
-      'total': SimpleSortedListExtractor(modeType, 'total')
+      'kda': SimpleSortedListExtractor(modeType, 'kda')
     }
     
     topListExtractorObject = topListExtractors.get(stats, None)

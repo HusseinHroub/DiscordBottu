@@ -3,6 +3,7 @@ from lolutils import lolApiUtils
 from queue import Queue
 from threading import Thread
 import time
+import sotrageutils
 
 def updateDBStats():
   summonersData = dbutils.getAllSummonerData()
@@ -62,3 +63,4 @@ def updateToDBIfNotEmptyData(newSummonersData):
   if newSummonersData != None and len(newSummonersData) > 0:
     print('updating db!')
     dbutils.updateSummonersData(newSummonersData)
+    sotrageutils.updateCache()

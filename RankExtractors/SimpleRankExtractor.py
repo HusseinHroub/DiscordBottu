@@ -10,5 +10,5 @@ class SimpleRankExtractor:
      for summoner_data in summoners_data:
        counter = counter + 1
        if summoner_data[0].lower() == summonerName:
-         return f"{summoner_data[0]} {self.statType} rank is {counter} of {len(summoners_data)}, total {self.statType if self.statType != 'total' else 'value'}: {summoner_data[1]}"
+         return f"{summoner_data[0]} {self.statType} rank is {counter} of {len(summoners_data)}, total {self.statType}: {summoner_data[1]}"
      return 'Sorry, wasnt able to locate summoner name'

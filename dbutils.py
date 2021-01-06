@@ -117,7 +117,7 @@ def isAccountIdExist(accountId):
 def insertSummoner(accountId, summonerName, kills, deaths, assists, lastGameTimeStamp):
   return connectionWrapper(InsertSummonerQuery(accountId, summonerName, kills, deaths, assists, lastGameTimeStamp))
 
-def getSummonersSortedByStat(stats, desc):
+def getSummonersSortedByStat(stats, desc = True):
    return connectionWrapper(GetSummonersOrderedByStatQuery(stats, desc))
 
 def getAllSummonerData():
