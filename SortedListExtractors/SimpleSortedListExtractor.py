@@ -1,5 +1,5 @@
 import enum
-import cacheutils
+import sotrageutils
 
 class ModeTypes(enum.Enum):
   top = 0
@@ -11,7 +11,7 @@ class SimpleSortedListExtractor:
     self.statType = statType
 
    def extract(self):
-     summoners_data = cacheutils.getSummonersSortedByStat(self.statType)
+     summoners_data = sotrageutils.getSummonersSortedByStat(self.statType)
      response = ''
      counter = 1
      if self.isDesc():
