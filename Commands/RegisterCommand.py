@@ -1,6 +1,8 @@
 from lolutils import lolApiUtils
 import dbutils
 import time
+import sotrageutils
+from threading import Thread
 
 class RegisterCommand:
   def __init__(self, commandArgs):
@@ -17,6 +19,7 @@ class RegisterCommand:
       dbutils.updateSummonerByAccountId(accountId = accountId, summonerName = summonerName)
       return f'Summoner is already registerred with old name, updated to the new provided name: {summonerName}'
     dbutils.insertSummoner(accountId, summonerName, *self.getStatsAndLastGameTimeStamp(accountId))
+    self.updateCacheInAnotherThread()
     return f'Successfully registered {summonerName} in bot database'
   
   def getStatsAndLastGameTimeStamp(self, accountId):
@@ -29,5 +32,9 @@ class RegisterCommand:
       lastGameTimeStamp = matches[0]['timestamp'] + 1
       kills, deaths, assists = lolApiUtils.getTotalStatsOfMatches(matches, accountId)
     return kills, deaths, assists, lastGameTimeStamp
+  
+  def updateCacheInAnotherThread(self):
+     thread = Thread(target=sotrageutils.updateCache)
+     thread.start()
 
 
