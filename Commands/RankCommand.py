@@ -1,6 +1,6 @@
 import dbutils
 from RankExtractors.SimpleRankExtractor import SimpleRankExtractor
-
+defaultStat = 'kda'
 class RankCommand:
   def __init__(self, commandArgs):
     self.commandArgs = commandArgs
@@ -9,7 +9,7 @@ class RankCommand:
     if len(self.commandArgs) == 0:
       return "Error: summoner name wasn't provided," + self.getHelpMessage()
     summonerName = self.commandArgs[0]
-    stats = 'kills' if len(self.commandArgs) == 1 else self.commandArgs[1]
+    stats = defaultStat if len(self.commandArgs) == 1 else self.commandArgs[1]
     rankExtractor = self.getRankExtractor(stats)
     if not dbutils.isSummonerExist(summonerName):
       return f"It seems this summoner name {summonerName} is not registerred, please register this summoner first using this command\n!lregister \"{summonerName}\""

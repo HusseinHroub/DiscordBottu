@@ -1,11 +1,13 @@
 from SortedListExtractors.SimpleSortedListExtractor import SimpleSortedListExtractor, ModeTypes
+
+defaultStat = 'kda'
 class SortedListCommand:
   def __init__(self, modeType, commandArgs):
     self.modeType = modeType
     self.commandArgs = commandArgs
  
   def execute(self):
-    stats = 'kills' if len(self.commandArgs) == 0 else self.commandArgs[0]
+    stats = defaultStat if len(self.commandArgs) == 0 else self.commandArgs[0]
     return self.getTopListExtractor(stats).extract()    
  
   def getHelpMessage(self):
