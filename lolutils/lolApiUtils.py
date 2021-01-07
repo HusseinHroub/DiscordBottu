@@ -18,7 +18,7 @@ def getJsonResponseOfUrl(url):
   return doGetJsonResponseOfUrl(url)
 
 @sleep_and_retry
-@limits(calls=20, period=1)
+@limits(calls=15, period=2)
 def doGetJsonResponseOfUrl(url, retryingAttemps = RETRYING_ATTEMPS):
   response = requests.get(url)
   status_code = response.status_code
@@ -30,9 +30,9 @@ def doGetJsonResponseOfUrl(url, retryingAttemps = RETRYING_ATTEMPS):
   print(f'got {status_code} status Code, retrying attemps = {retryingAttemps}')
   if retryingAttemps < 1:
      raise Exception(f'Tried to retry the request to avoid {status_code} but failed')
-  print(f'sleeping for {RETRYING_ATTEMPS - retryingAttemps + 1} then will retry')
+  print(f'sleeping for {RETRYING_ATTEMPS - retryingAttemps + 1} seconds then will retry')
   time.sleep(RETRYING_ATTEMPS - retryingAttemps + 1)
-  doGetJsonResponseOfUrl(retryingAttemps - 1)
+  return doGetJsonResponseOfUrl(url, retryingAttemps - 1)
 
   
 def getAccountIdByName(name):
