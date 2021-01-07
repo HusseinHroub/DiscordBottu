@@ -35,3 +35,6 @@ def updateSortedLists(newTopKills, newTopDeaths, newTopAssists, newTopKdas):
   topDeaths = newTopDeaths
   topAssists = newTopAssists
   topKdas = newTopKdas
+
+def getKDAList():
+  return topKdas
