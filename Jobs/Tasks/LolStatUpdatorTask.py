@@ -1,0 +1,64 @@
+import dbutils
+from lolutils import lolApiUtils
+from queue import Queue
+from threading import Thread
+import time
+import sotrageutils
+
+class LolStatUpdatorTask:
+  def execute(self):
+    summonersData = dbutils.getAllSummonerData()
+    results = self.getSummonersStats(summonersData)
+    newSummonersData = self.getNewSummonerData(summonersData, results)
+    self.updateToDBIfNotEmptyData(newSummonersData)
+
+  def getSummonersStats(self, summonersData):
+    queue = Queue(maxsize=0)
+    numberOfThreads = min(30, len(summonersData))
+    results = [{} for x in summonersData];
+    for i in range(len(summonersData)):
+      queue.put((i, summonersData[i]))
+    threads = []
+    for i in range(numberOfThreads):
+      worker = Thread(target=self.getTotalStatsOfSummonerWorker, args=(queue, results))
+      threads.append(worker)
+      worker.start()
+    for worker in threads:
+      worker.join()
+    return results
+
+  def getTotalStatsOfSummonerWorker(self, queue, results):
+    while not queue.empty():
+      work = queue.get()
+      summonerData = work[1]
+      results[work[0]]={'kills': 0, 'deaths': 0, 'assists': 0, 'accountId': summonerData[0], 'lastGameTimeStamp': time.time()}
+      matches = lolApiUtils.getMatchesByAccountId(summonerData[0], summonerData[4])
+      if matches != None and len(matches) > 0:
+        kills, deaths, assists = lolApiUtils.getTotalStatsOfMatches(matches, summonerData[0])
+        result = results[work[0]]
+        result['kills'] = kills
+        result['deaths'] = deaths
+        result['assists'] = assists
+        result['lastGameTimeStamp'] = matches[0]['timestamp'] + 1
+      
+  def getNewSummonerData(self, summonersData, results):
+    newSummonersData = []
+    for i in range(len(summonersData)):
+      result = results[i]
+      if(result['kills'] == 0 and result['deaths'] == 0 and result['assists'] == 0):
+        continue
+      summonerData = summonersData[i]
+      newSummonersData.append({
+        'kills': result['kills'] + summonerData[1],
+        'deaths': result['deaths'] + summonerData[2],
+        'assists': result['assists'] + summonerData[3],
+        'accountId': result['accountId'],
+        'lastGameTimeStamp': result['lastGameTimeStamp']
+      })
+    return newSummonersData
+    
+  def updateToDBIfNotEmptyData(self, newSummonersData):
+    if newSummonersData != None and len(newSummonersData) > 0:
+      print('updating db!')
+      dbutils.updateSummonersData(newSummonersData)
+      sotrageutils.updateCache()
