@@ -1,3 +1,5 @@
+//Discord bot V1
+
 import discord
 import os
 import Commands.CommandsFactory as CommandsFactory
