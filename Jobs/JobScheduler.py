@@ -2,7 +2,7 @@ import traceback
 import time
 from threading import Thread
 
-class JobExecutor:
+class JobScheduler:
   def __init__(self, task, timePeriodInSeconds):
     self.task = task
     self.timePeriodInSeconds = timePeriodInSeconds

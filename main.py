@@ -4,11 +4,11 @@ import Commands.CommandsFactory as CommandsFactory
 from keep_alive import keep_alive
 import shlex
 import traceback
-from Jobs.JobExecutor import JobExecutor
+from Jobs.JobScheduler import JobScheduler
 import sotrageutils
 from Jobs.Tasks.LolStatUpdatorTask import LolStatUpdatorTask
 from Jobs.Tasks.LolAnnouncer import LolAnnouncer
-import cacheutils
+import asyncio
 
 client = discord.Client()
 
@@ -19,7 +19,7 @@ def stringStringArray(stringArray):
 @client.event
 async def on_ready():
   print('Hello bot is ready')
-  JobExecutor(LolAnnouncer(client.get_channel(641925086055628801)), 3600).start()
+  JobScheduler(LolAnnouncer(client.get_channel(642348924153364482), asyncio.get_event_loop()), 3).start()
 
 
 @client.event
@@ -43,5 +43,5 @@ async def on_message(message):
   
 keep_alive()
 sotrageutils.updateCache()
-JobExecutor(LolStatUpdatorTask(), 900).start()
+JobScheduler(LolStatUpdatorTask(), 900).start()
 client.run(os.getenv('CTOKEN'))
