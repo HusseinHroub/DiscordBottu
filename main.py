@@ -19,7 +19,7 @@ def stringStringArray(stringArray):
 @client.event
 async def on_ready():
   print('Hello bot is ready')
-  JobScheduler(LolAnnouncer(client.get_channel(642348924153364482), asyncio.get_event_loop()), 3).start()
+  JobScheduler(LolAnnouncer(client.get_channel(642348924153364482), asyncio.get_running_loop()), 3600).start()
 
 
 @client.event

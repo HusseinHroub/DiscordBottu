@@ -14,4 +14,3 @@ class LolAnnouncer:
       self.recentTopSummoner = topSummoner
       embed=discord.Embed(description=f'{self.recentTopSummoner[0]} is the top summoner with {self.recentTopSummoner[1]} kda, good job!.', color=0x27966b)
       self.loop.create_task(self.channel.send(embed=embed))
-
