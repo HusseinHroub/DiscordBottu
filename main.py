@@ -1,4 +1,4 @@
-//Discord bot V1
+# Discord bot V1
 
 import discord
 import os
