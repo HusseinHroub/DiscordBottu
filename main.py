@@ -14,7 +14,8 @@ import asyncio
 
 client = discord.Client()
 
-botChannelId = 641925086055628801
+# botChannelId = 641925086055628801
+botChannelId = 642348924153364482
 
 def stringStringArray(stringArray):
   for i in range (len(stringArray)):
@@ -23,7 +24,7 @@ def stringStringArray(stringArray):
 @client.event
 async def on_ready():
   print('Hello bot is ready')
-  JobScheduler(LolAnnouncer(client.get_channel(botChannelId), asyncio.get_running_loop()), 3600).start()
+  JobScheduler(LolAnnouncer(client.get_channel(botChannelId), asyncio.get_running_loop()), 10).start()
 
 
 @client.event

@@ -8,6 +8,9 @@ DEATHS = 'deaths'
 ASSISTS = 'assists'
 LAST_GAME_TIME_STAMP = 'lastGameTimeStamp'
 
+COMMON_TABLE_NAME = 'CommonTable'
+KEY = 'common_key'
+VALUE = 'common_value'
 
 DB_USER = os.getenv('DBUSER')
 DB_PASSWORD = os.getenv('DBPASSWORD')
@@ -87,6 +90,26 @@ class UpdateSummonersDataQuery:
     mydb.commit()
     mycursor.close()
 
+class GetRecentTopPlayerQuery:
+    def execute(self, mydb):
+      mycursor = mydb.cursor()
+      mycursor.execute(f"SELECT {VALUE} FROM {COMMON_TABLE_NAME} WHERE {KEY} = 'recentTopSummoner'")
+      data = mycursor.fetchone()
+      mycursor.close()
+      return data
+
+class UpdateRecentTopSummonerQuery:
+  def __init__(self, summonerName):
+    self.summonerName = summonerName
+   
+  def execute(self, mydb):
+    mycursor = mydb.cursor()
+    sql = f"UPDATE {COMMON_TABLE_NAME} SET {VALUE} = %s WHERE {KEY} = 'recentTopSummoner'"
+    val = (self.summonerName,)
+    mycursor.execute(sql, val)
+    mydb.commit()
+    mycursor.close()  
+
 class UpdateSummonerByAccountIdQuery:
   def __init__(self, accountId, summonerName):
    self.accountId = accountId
@@ -128,3 +151,9 @@ def updateSummonerByAccountId(accountId, summonerName = None):
   
 def updateSummonersData(summonersData):
   return connectionWrapper(UpdateSummonersDataQuery(summonersData))
+
+def getRecentTopPlayer():
+  return connectionWrapper(GetRecentTopPlayerQuery())
+
+def updateRecentTopPlayer(summonerName):
+  connectionWrapper(UpdateRecentTopSummonerQuery(summonerName))

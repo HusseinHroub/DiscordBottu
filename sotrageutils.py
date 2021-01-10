@@ -11,3 +11,12 @@ def updateCache():
  
 def getSummonersSortedByStat(statType):
   return cacheutils.getSummonersSortedByStat(statType)
+
+def getRecentTopPlayer():
+  return dbutils.getRecentTopPlayer()
+
+def getKDAList():
+  return cacheutils.getKDAList()
+
+def updateRecentTopPlayer(summonerName):
+  dbutils.updateRecentTopPlayer(summonerName)
