@@ -6,8 +6,10 @@ def updateCache():
   topKills = dbutils.getSummonersSortedByStat('kills')
   topDeaths = dbutils.getSummonersSortedByStat('deaths', False)
   topAssists = dbutils.getSummonersSortedByStat('assists')
-  topKdas = dbutils.getSummonersSortedByStat('kda')
-  cacheutils.updateSortedLists(topKills, topDeaths, topAssists, topKdas)
+  topAvgKda = dbutils.getSummonersSortedByStat('avg_kda')
+  topFarms = dbutils.getSummonersSortedByStat('farms')
+  topTotalGames = dbutils.getSummonersSortedByStat('total_games')
+  cacheutils.updateSortedLists(topKills, topDeaths, topAssists, topAvgKda, topFarms, topTotalGames)
  
 def getSummonersSortedByStat(statType):
   return cacheutils.getSummonersSortedByStat(statType)

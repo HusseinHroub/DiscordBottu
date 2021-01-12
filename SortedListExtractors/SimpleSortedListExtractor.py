@@ -27,7 +27,10 @@ class SimpleSortedListExtractor:
 
    
    def getFormattedResponse(self, counter, summoner_data):
-     return f'{counter}- {summoner_data[0]} with {summoner_data[1]} {self.statType}\n\n'
+     value = summoner_data[1]
+     if self.statType == 'avg_kda':
+      value = round(value, 2)
+     return f'{counter}- {summoner_data[0]} with {value} {self.statType}\n\n'
   
    def isDesc(self):
      if self.modeType == ModeTypes.top:

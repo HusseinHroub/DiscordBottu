@@ -2,7 +2,6 @@ import dbutils
 from lolutils import lolApiUtils
 from queue import Queue
 from threading import Thread
-import time
 import sotrageutils
 
 class LolStatUpdatorTask:
@@ -15,7 +14,7 @@ class LolStatUpdatorTask:
   def getSummonersStats(self, summonersData):
     queue = Queue(maxsize=0)
     numberOfThreads = min(30, len(summonersData))
-    results = [{} for x in summonersData];
+    results = [None for x in summonersData];
     for i in range(len(summonersData)):
       queue.put((i, summonersData[i]))
     threads = []
@@ -31,32 +30,41 @@ class LolStatUpdatorTask:
     while not queue.empty():
       work = queue.get()
       summonerData = work[1]
-      results[work[0]]={'kills': 0, 'deaths': 0, 'assists': 0, 'accountId': summonerData[0], 'lastGameTimeStamp': time.time()}
       matches = lolApiUtils.getMatchesByAccountId(summonerData[0], summonerData[4])
       if matches != None and len(matches) > 0:
-        kills, deaths, assists = lolApiUtils.getTotalStatsOfMatches(matches, summonerData[0])
-        result = results[work[0]]
-        result['kills'] = kills
-        result['deaths'] = deaths
-        result['assists'] = assists
-        result['lastGameTimeStamp'] = matches[0]['timestamp'] + 1
+        apiResult = lolApiUtils.getTotalStatsOfMatches(matches, summonerData[0])
+        result = {
+          **apiResult,
+          'lastGameTimeStamp': matches[0]['timestamp'] + 1,
+          'accountId': summonerData[0]
+        }
+        results[work[0]] = result
       
   def getNewSummonerData(self, summonersData, results):
     newSummonersData = []
     for i in range(len(summonersData)):
       result = results[i]
-      if(result['kills'] == 0 and result['deaths'] == 0 and result['assists'] == 0):
+      if result == None:
         continue
       summonerData = summonersData[i]
       newSummonersData.append({
-        'kills': result['kills'] + summonerData[1],
-        'deaths': result['deaths'] + summonerData[2],
-        'assists': result['assists'] + summonerData[3],
-        'accountId': result['accountId'],
-        'lastGameTimeStamp': result['lastGameTimeStamp']
+        'kills': result['total_kills'] + summonerData[1],
+        'deaths': result['total_deaths'] + summonerData[2],
+        'assists': result['total_assists'] + summonerData[3],
+        'farms': result['total_farms'] + summonerData[5],
+        'accountId': summonerData[0],
+        'lastGameTimeStamp': result['lastGameTimeStamp'],
+        **self.getKDAInfo(result['avg_kda'], summonerData[6], result['sample_count'], summonerData[7])
       })
     return newSummonersData
     
+  def getKDAInfo(self, newKDA, oldKda, newCount, oldCount):
+    totalCount = newCount + oldCount
+    return {
+     'avgKda': oldKda + (newKDA - oldKda) / totalCount,
+     'totalGames': totalCount
+     }
+
   def updateToDBIfNotEmptyData(self, newSummonersData):
     if newSummonersData != None and len(newSummonersData) > 0:
       print('updating db!')

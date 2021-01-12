@@ -6,8 +6,9 @@ import threading
 topKills = []
 topDeaths = []
 topAssists = []
-topKdas = []
-
+topAvgKda = []
+topFarms = []
+topTotalGames = []
 
 def getSummonersSortedByStat(stats):
   return doGetSummonerSortedByStat(stats)
@@ -17,7 +18,9 @@ def doGetSummonerSortedByStat(stats):
     'kills' : topKills,
     'deaths' : topDeaths,
     'assists' : topAssists,
-    'kda' : topKdas
+    'avg_kda' : topAvgKda,
+    'farms' : topFarms,
+    'total_games' : topTotalGames
     }
 
   response = switch.get(stats)
@@ -25,16 +28,20 @@ def doGetSummonerSortedByStat(stats):
     raise Exception(f"couldn't find stats type of {stats}")
   return response
 
-def updateSortedLists(newTopKills, newTopDeaths, newTopAssists, newTopKdas):
+def updateSortedLists(newTopKills, newTopDeaths, newTopAssists, newTopAvgKda, newTopFarms, newTopTotalGames):
   global topKills
   global topDeaths
   global topAssists
-  global topKdas
+  global topAvgKda
+  global topFarms
+  global topTotalGames
 
   topKills = newTopKills
   topDeaths = newTopDeaths
   topAssists = newTopAssists
-  topKdas = newTopKdas
+  topAvgKda = newTopAvgKda
+  topFarms = newTopFarms
+  topTotalGames = newTopTotalGames
 
 def getKDAList():
-  return topKdas
+  return topAvgKda

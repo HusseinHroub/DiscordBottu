@@ -18,20 +18,19 @@ class RegisterCommand:
     if(dbutils.isAccountIdExist(accountId)):
       dbutils.updateSummonerByAccountId(accountId = accountId, summonerName = summonerName)
       return f'Summoner is already registerred with old name, updated to the new provided name: {summonerName}'
-    dbutils.insertSummoner(accountId, summonerName, *self.getStatsAndLastGameTimeStamp(accountId))
+    lastGamesStats = self.getStatsAndLastGameTimeStamp(accountId)
+    dbutils.insertSummoner(accountId, summonerName,lastGamesStats['total_kills'], lastGamesStats['total_deaths'], lastGamesStats['total_assists'], lastGamesStats['lastGameTimeStamp'], lastGamesStats['total_farms'], lastGamesStats['avg_kda'], lastGamesStats['sample_count'])
     self.updateCacheInAnotherThread()
     return f'Successfully registered {summonerName} in bot database'
   
   def getStatsAndLastGameTimeStamp(self, accountId):
     matches = lolApiUtils.getMatchesByAccountId(accountId)
-    kills = 0
-    deaths = 0
-    assists = 0
-    lastGameTimeStamp = time.time()
+    result = {'total_kills' : 0, 'total_assists': 0, 'total_assists': 0, 'lastGameTimeStamp': time.time(), 'total_farms': 0, 'avg_kda': 0, 'numberOfGames' : 0}
     if matches != None:
-      lastGameTimeStamp = matches[0]['timestamp'] + 1
-      kills, deaths, assists = lolApiUtils.getTotalStatsOfMatches(matches, accountId)
-    return kills, deaths, assists, lastGameTimeStamp
+      result = {
+        **lolApiUtils.getTotalStatsOfMatches(matches, accountId), 'lastGameTimeStamp': matches[0]['timestamp'] + 1
+        }
+    return result
   
   def updateCacheInAnotherThread(self):
      thread = Thread(target=sotrageutils.updateCache)

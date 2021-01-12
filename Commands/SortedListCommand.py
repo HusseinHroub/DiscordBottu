@@ -1,6 +1,6 @@
 from SortedListExtractors.SimpleSortedListExtractor import SimpleSortedListExtractor, ModeTypes
 
-defaultStat = 'kda'
+defaultStat = 'avg_kda'
 class SortedListCommand:
   def __init__(self, modeType, commandArgs):
     self.modeType = modeType
@@ -24,7 +24,9 @@ class SortedListCommand:
       'kills': SimpleSortedListExtractor(modeType, 'kills'),
       'deaths': SimpleSortedListExtractor(modeType, 'deaths'),
       'assists': SimpleSortedListExtractor(modeType, 'assists'),
-      'kda': SimpleSortedListExtractor(modeType, 'kda')
+      'avg_kda': SimpleSortedListExtractor(modeType, 'avg_kda'),
+      'farms': SimpleSortedListExtractor(modeType, 'farms'),
+      'total_games': SimpleSortedListExtractor(modeType, 'total_games')
     }
     
     topListExtractorObject = topListExtractors.get(stats, None)

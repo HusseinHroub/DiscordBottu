@@ -1,6 +1,6 @@
 import dbutils
 from RankExtractors.SimpleRankExtractor import SimpleRankExtractor
-defaultStat = 'kda'
+defaultStat = 'avg_kda'
 class RankCommand:
   def __init__(self, commandArgs):
     self.commandArgs = commandArgs
@@ -17,14 +17,17 @@ class RankCommand:
     
 
   def getHelpMessage(self):
-    return '\nHere is an example on how to use this command\n!lrank \"3amo Draven\" [this will get the rank based on kills count] \n\n**You also can use one of the followings as valid commands:\n1- !lrank \"3amo Draven\" kills [this will get the rank based on kills count]\n2- !lrank \"3amo Draven\" deaths [this will get the rank baed on deaths count]\n3- !lrank \"3amo Draven\" assists [this will get the rank based on assists count]\n4- !lrank \"3amo Draven\" total [This will merge kills and deaths and assists, and return the global rank]'
+    return '\nHere is an example on how to use this command\n!lrank \"3amo Draven\" [this will get the rank based on avg_kda count] \n\n**You also can use one of the followings as valid commands:\n1- !lrank \"3amo Draven\" kills [this will get the rank based on kills count]\n2- !lrank \"3amo Draven\" deaths [this will get the rank baed on deaths count]\n3- !lrank \"3amo Draven\" assists [this will get the rank based on assists count]\n4- !lrank \"3amo Draven\" avg_kda [This rank based on avg_kda]'
   
   def getRankExtractor(self, stats):
     rankExtractors = {
       'kills': SimpleRankExtractor('kills'),
       'deaths': SimpleRankExtractor('deaths'),
       'assists': SimpleRankExtractor('assists'),
-      'kda': SimpleRankExtractor('kda')
+      'avg_kda': SimpleRankExtractor('avg_kda'),
+      'kda': SimpleRankExtractor('kda'),
+      'farms': SimpleRankExtractor('farms'),
+      'total_games': SimpleRankExtractor('total_games'),
     }
     
     rankExtractorObject = rankExtractors.get(stats, None)

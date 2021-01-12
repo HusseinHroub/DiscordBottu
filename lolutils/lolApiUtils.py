@@ -8,7 +8,7 @@ region = 'euw1'
 api_key = os.getenv('LAPIKEY')
 root_url = f'https://{region}.api.riotgames.com/lol'
 
-CALLS_NUMBER = 95
+CALLS_NUMBER = 80
 CALLS_PERIOD = 120
 RETRYING_ATTEMPS = 3
 
@@ -60,8 +60,7 @@ def getStatsOfGameId(gameId, accountId):
   match_details = getJsonResponseOfUrl(f'{root_url}/match/v4/matches/{gameId}?api_key={api_key}')
   particpantId = getParticpantIdOfGameDetails(match_details, accountId)
   if particpantId != -1:
-    stats =match_details['participants'][particpantId - 1]['stats'] 
-    return stats['kills'], stats['deaths'], stats['assists']
+    return match_details['participants'][particpantId - 1]['stats']    
   else:
     print(f'warning cloudnt find particpantId of gameId: {gameId}')
     return 0

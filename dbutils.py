@@ -7,6 +7,9 @@ KILLS = 'kills'
 DEATHS = 'deaths'
 ASSISTS = 'assists'
 LAST_GAME_TIME_STAMP = 'lastGameTimeStamp'
+FARMS = 'farms'
+AVG_KDA = 'avg_kda'
+TOTAL_GAMES = 'total_games'
 
 COMMON_TABLE_NAME = 'CommonTable'
 KEY = 'common_key'
@@ -40,18 +43,21 @@ class AccountIdExistQuery:
     return myresult != None and len(myresult) == 1
 
 class InsertSummonerQuery:
-  def __init__(self, accountId, summonerName, kills, deaths, assists, lastGameTimeStamp):
+  def __init__(self, accountId, summonerName, kills, deaths, assists, lastGameTimeStamp, farms, avgKda, numberOfGames):
     self.accountId = accountId
     self.summonerName = summonerName
     self.kills = kills
     self.deaths = deaths
     self.assists = assists
     self.lastGameTimeStamp = lastGameTimeStamp
+    self.farms = farms
+    self.avgKda = avgKda
+    self.numberOfGames = numberOfGames
 
   def execute(self, mydb):
     mycursor = mydb.cursor()
-    sql = f"INSERT INTO {TABLE_NAME} ({ACCOUNT_ID}, {NAME}, {KILLS}, {DEATHS}, {ASSISTS}, {LAST_GAME_TIME_STAMP}) VALUES (%s, %s, %s, %s, %s, %s)"
-    val = (self.accountId, self.summonerName, self.kills, self.deaths, self.assists, self.lastGameTimeStamp)
+    sql = f"INSERT INTO {TABLE_NAME} ({ACCOUNT_ID}, {NAME}, {KILLS}, {DEATHS}, {ASSISTS}, {FARMS}, {AVG_KDA}, {TOTAL_GAMES}, {LAST_GAME_TIME_STAMP}) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    val = (self.accountId, self.summonerName, self.kills, self.deaths, self.assists, self.farms, self.avgKda, self.numberOfGames, self.lastGameTimeStamp)
     mycursor.execute(sql, val)
     mydb.commit()
     mycursor.close()
@@ -71,7 +77,7 @@ class GetSummonersOrderedByStatQuery:
 class GetAllSummonerDataQuery:
   def execute(self, mydb):
     mycursor = mydb.cursor()
-    mycursor.execute(f"SELECT {ACCOUNT_ID}, {KILLS}, {DEATHS}, {ASSISTS}, {LAST_GAME_TIME_STAMP} FROM {TABLE_NAME}")
+    mycursor.execute(f"SELECT {ACCOUNT_ID}, {KILLS}, {DEATHS}, {ASSISTS}, {LAST_GAME_TIME_STAMP}, {FARMS}, {AVG_KDA}, {TOTAL_GAMES} FROM {TABLE_NAME}")
     data = mycursor.fetchall()
     mycursor.close()
     return data
@@ -82,10 +88,10 @@ class UpdateSummonersDataQuery:
 
   def execute(self, mydb):
     mycursor = mydb.cursor()
-    sql = f"UPDATE {TABLE_NAME} SET {KILLS} = %s, {DEATHS} = %s, {ASSISTS} = %s , {LAST_GAME_TIME_STAMP} = %s WHERE {ACCOUNT_ID} = %s"
+    sql = f"UPDATE {TABLE_NAME} SET {KILLS} = %s, {DEATHS} = %s, {ASSISTS} = %s , {LAST_GAME_TIME_STAMP} = %s, {FARMS} = %s, {AVG_KDA} = %s, {TOTAL_GAMES} = %s WHERE {ACCOUNT_ID} = %s"
     values = []
     for summonerData in self.summonersData:
-      values.append((summonerData['kills'], summonerData['deaths'], summonerData['assists'], summonerData['lastGameTimeStamp'], summonerData['accountId']))
+      values.append((summonerData['kills'], summonerData['deaths'], summonerData['assists'], summonerData['lastGameTimeStamp'], summonerData['farms'], summonerData['avgKda'], summonerData['totalGames'], summonerData['accountId']))
     mycursor.executemany(sql, values)
     mydb.commit()
     mycursor.close()
@@ -137,8 +143,8 @@ def isSummonerExist(summonerName):
 def isAccountIdExist(accountId):
   return connectionWrapper(AccountIdExistQuery(accountId))
 
-def insertSummoner(accountId, summonerName, kills, deaths, assists, lastGameTimeStamp):
-  return connectionWrapper(InsertSummonerQuery(accountId, summonerName, kills, deaths, assists, lastGameTimeStamp))
+def insertSummoner(accountId, summonerName, kills, deaths, assists, lastGameTimeStamp, farms, avgKda, numberOfGames):
+  return connectionWrapper(InsertSummonerQuery(accountId, summonerName, kills, deaths, assists, lastGameTimeStamp, farms, avgKda, numberOfGames))
 
 def getSummonersSortedByStat(stats, desc = True):
    return connectionWrapper(GetSummonersOrderedByStatQuery(stats, desc))
