@@ -20,16 +20,17 @@ class SortedListCommand:
 
   def getTopListExtractor(self, stats):
     modeType = ModeTypes.top if self.modeType == '!ltop' else ModeTypes.worst
-    topListExtractors = {
-      'kills': SimpleSortedListExtractor(modeType, 'kills'),
-      'deaths': SimpleSortedListExtractor(modeType, 'deaths'),
-      'assists': SimpleSortedListExtractor(modeType, 'assists'),
-      'avg_kda': SimpleSortedListExtractor(modeType, 'avg_kda'),
-      'farms': SimpleSortedListExtractor(modeType, 'farms'),
-      'total_games': SimpleSortedListExtractor(modeType, 'total_games')
-    }
-    
-    topListExtractorObject = topListExtractors.get(stats, None)
-    if(topListExtractorObject == None):
+    if stats == 'kills' or stats == 'kill':
+      return SimpleSortedListExtractor(modeType, 'kills')
+    elif stats == 'deaths' or stats == 'death':
+      return SimpleSortedListExtractor(modeType, 'deaths')
+    elif stats == 'assists' or stats == 'assist':
+      return SimpleSortedListExtractor(modeType, 'assists')
+    elif stats == 'avg_kda' or stats == 'kda':
+      return SimpleSortedListExtractor(modeType, 'avg_kda')
+    elif stats == 'farms' or stats == 'farm':
+      return SimpleSortedListExtractor(modeType, 'farms')
+    elif stats == 'total_games' or stats == 'games' or stats == 'games_count':
+      return SimpleSortedListExtractor(modeType, 'total_games')
+    else:
       raise Exception(f"Incorrect first argument, invalid stat value: {stats}" + self.getHelpMessage())
-    return topListExtractorObject

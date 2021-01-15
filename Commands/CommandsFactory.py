@@ -22,4 +22,4 @@ def getCommandObject(command, commandArgs):
     return switcher.get(command, None) 
 
 def getHelpMessage():
-  return 'avaiable commands to use:\n!lrank "Summoner Name" [kills, deaths, assists, kda]\n!ltop or !lworst [kills, deaths, assists, kda]\n!lregister "Summoner Name"'
+  return 'avaiable commands to use:\n!lrank "Summoner Name" [kills, deaths, assists, kda]\n!ltop or !lworst [kills, deaths, assists, kda, farms, games]\n!lregister "Summoner Name"'
