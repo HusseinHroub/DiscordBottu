@@ -5,14 +5,20 @@ from threading import Thread
 import sotrageutils
 from statsUtils import lolStatsMerger
 import traceback
+import discord
+import asyncio
 
 class LolStatUpdatorTask:
+  def __init__(self, channel, loop):
+    self.channel = channel
+    self.loop = loop
+
   def execute(self):
     summonersData = dbutils.getAllSummonerData()
     results = self.getSummonersStats(summonersData)
     newSummonersData = self.getNewSummonerData(summonersData, results)
     self.updateToDBIfNotEmptyData(newSummonersData)
-    self.shareAnnouncmentMessagesInDB(results)
+    self.shareAnnouncmentMessagesInDB(results, summonersData)
     
   def getSummonersStats(self, summonersData):
     queue = Queue(maxsize=0)
@@ -79,12 +85,30 @@ class LolStatUpdatorTask:
       dbutils.updateSummonersData(newSummonersData)
       sotrageutils.updateCache()
   
-  def shareAnnouncmentMessagesInDB(self, results):
-    print('share annoucnment not yet implemented brother.')
-    # results[i] == None
-    # messages = []
-    # for i in range(len(results)):
-    #   matchesStats = result[i]['matchesStats']
-    #   for matchStat in matchesStats:
-        
+  def shareAnnouncmentMessagesInDB(self, results, summonersData):
+    for i in range(len(results)):
+      if results[i] == None:
+        continue
+      matchesStats = results[i]['matchesStats']
+      summonerData = summonersData[i]
+      for matchStat in matchesStats:
+        message = ''
+        if matchStat['kills'] > 19:
+          message += f'{matchStat["kills"]} Kills!\n'
+        if matchStat['deaths'] > 14:
+          message += f'{matchStat["deaths"]} Deaths! [waaaaw..]\n'
+        if matchStat['pentaKills'] > 0:
+          message += f'{matchStat["pentaKills"]} PentaKills!\n'
+        if matchStat['quadraKills'] > 0:
+          message += f'{matchStat["quadraKills"]} QuadraKills!\n'
+        if matchStat['doubleKills'] > 3:
+          message += f'{matchStat["doubleKills"]} DoubleKills!\n'
+        if matchStat['assists'] > 19:
+          message += f'{matchStat["assists"]} Assists!\n'
+        if len(message) != '':
+          self.shareStatMessageInChannel(summonerData[8], message)
+
+  def shareStatMessageInChannel(self, playerName, message):
+    embed=discord.Embed(description=f'One of {playerName} games he got:\n{message}', color=0x27966b)
+    asyncio.run_coroutine_threadsafe(self.channel.send(embed=embed), self.loop)
       

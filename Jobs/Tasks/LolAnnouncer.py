@@ -2,7 +2,7 @@ import sotrageutils
 import discord
 import asyncio
 class LolAnnouncer:
-  
+    
   def __init__(self, channel, loop):
     self.channel = channel
     self.loop = loop

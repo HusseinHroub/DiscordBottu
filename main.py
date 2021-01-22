@@ -22,8 +22,13 @@ def stringStringArray(stringArray):
 
 @client.event
 async def on_ready():
-  print('Hello bot is ready')
-  JobScheduler(LolAnnouncer(client.get_channel(botChannelId), asyncio.get_running_loop()), 3600).start()
+  sotrageutils.updateCache()
+  print('Updated cache')
+  JobScheduler(LolAnnouncer(client.get_channel(botChannelId), 
+  asyncio.get_running_loop()), 3600).start()
+  JobScheduler(LolStatUpdatorTask(client.get_channel(botChannelId), 
+  asyncio.get_running_loop()), 300).start()
+  print('started two jobs bro!')
 
 
 @client.event
@@ -46,6 +51,4 @@ async def on_message(message):
       await message.channel.send(embed=embed)
   
 keep_alive()
-sotrageutils.updateCache()
-JobScheduler(LolStatUpdatorTask(), 300).start()
 client.run(os.getenv('CTOKEN'))

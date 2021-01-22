@@ -77,7 +77,7 @@ class GetSummonersOrderedByStatQuery:
 class GetAllSummonerDataQuery:
   def execute(self, mydb):
     mycursor = mydb.cursor()
-    mycursor.execute(f"SELECT {ACCOUNT_ID}, {KILLS}, {DEATHS}, {ASSISTS}, {LAST_GAME_TIME_STAMP}, {FARMS}, {AVG_KDA}, {TOTAL_GAMES} FROM {TABLE_NAME}")
+    mycursor.execute(f"SELECT {ACCOUNT_ID}, {KILLS}, {DEATHS}, {ASSISTS}, {LAST_GAME_TIME_STAMP}, {FARMS}, {AVG_KDA}, {TOTAL_GAMES}, {NAME} FROM {TABLE_NAME}")
     data = mycursor.fetchall()
     mycursor.close()
     return data
