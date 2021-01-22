@@ -109,6 +109,6 @@ class LolStatUpdatorTask:
           self.shareStatMessageInChannel(summonerData[8], message)
 
   def shareStatMessageInChannel(self, playerName, message):
-    embed=discord.Embed(description=f'One of {playerName} games he got:\n{message}', color=0x27966b)
+    embed=discord.Embed(title='Today News!', description=f'One of {playerName} games he got:\n{message}', color=0x27966b)
     asyncio.run_coroutine_threadsafe(self.channel.send(embed=embed), self.loop)
       
