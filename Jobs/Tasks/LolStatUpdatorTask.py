@@ -92,23 +92,25 @@ class LolStatUpdatorTask:
       matchesStats = results[i]['matchesStats']
       summonerData = summonersData[i]
       for matchStat in matchesStats:
-        message = ''
+        messages = []
         if matchStat['kills'] > 19:
-          message += f'{matchStat["kills"]} Kills!\n'
+          messages.append({'name': 'Kills', 'value': matchStat["kills"]})
         if matchStat['deaths'] > 14:
-          message += f'{matchStat["deaths"]} Deaths! [waaaaw..]\n'
+          messages.append({'name': 'Deaths (waaw!)', 'value': matchStat["deaths"]})
         if matchStat['pentaKills'] > 0:
-          message += f'{matchStat["pentaKills"]} PentaKills!\n'
+          messages.append({'name': 'PentaKills', 'value': matchStat["pentaKills"]})
         if matchStat['quadraKills'] > 0:
-          message += f'{matchStat["quadraKills"]} QuadraKills!\n'
+          messages.append({'name': 'QuadraKills', 'value': matchStat["quadraKills"]})
         if matchStat['doubleKills'] > 3:
-          message += f'{matchStat["doubleKills"]} DoubleKills!\n'
+          messages.append({'name': 'DoubleKills', 'value': matchStat["doubleKills"]})
         if matchStat['assists'] > 19:
-          message += f'{matchStat["assists"]} Assists!\n'
-        if len(message) != '':
-          self.shareStatMessageInChannel(summonerData[8], message)
+          messages.append({'name': 'Assists', 'value': matchStat["assists"]})
+        if len(messages) > 0:
+          self.shareStatMessageInChannel(summonerData[8], messages)
 
-  def shareStatMessageInChannel(self, playerName, message):
-    embed=discord.Embed(title='Today News!', description=f'One of {playerName} games he got:\n{message}', color=0x27966b)
+  def shareStatMessageInChannel(self, playerName, messages):
+    embed=discord.Embed(title='Today News!', description=f'One of {playerName} games he got:', color=0x27966b)
+    for message in messages:
+      embed.add_field(name=message['name'], value=message['value'], inline=True)
     asyncio.run_coroutine_threadsafe(self.channel.send(embed=embed), self.loop)
       
