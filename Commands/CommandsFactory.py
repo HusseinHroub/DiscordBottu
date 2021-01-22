@@ -1,6 +1,7 @@
 from Commands.RegisterCommand import RegisterCommand
 from Commands.RankCommand import RankCommand
 from Commands.SortedListCommand import SortedListCommand
+from Commands.LeaveCommand import LeaveCommand
 
 def getCommand(command, commandArgs):
   command = command.lower()
@@ -17,6 +18,7 @@ def getCommandObject(command, commandArgs):
         '!lrank': RankCommand(lowerCommandVersionArgs), 
         '!ltop': SortedListCommand(command, lowerCommandVersionArgs),
         '!lworst': SortedListCommand(command, lowerCommandVersionArgs),
+        '!leave': LeaveCommand()
         
     }   
     return switcher.get(command, None) 

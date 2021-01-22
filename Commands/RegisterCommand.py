@@ -3,6 +3,7 @@ import dbutils
 import time
 import sotrageutils
 from threading import Thread
+from statsUtils import lolStatsMerger
 
 class RegisterCommand:
   def __init__(self, commandArgs):
@@ -27,8 +28,10 @@ class RegisterCommand:
     matches = lolApiUtils.getMatchesByAccountId(accountId)
     result = {'total_kills' : 0, 'total_assists': 0, 'total_assists': 0, 'lastGameTimeStamp': time.time(), 'total_farms': 0, 'avg_kda': 0, 'numberOfGames' : 0}
     if matches != None:
+      matches_stats = lolApiUtils.getMatchesStats(matches, accountId)
+      matches_merged_stat = lolStatsMerger.mergeGamesStats(matches_stats)
       result = {
-        **lolApiUtils.getTotalStatsOfMatches(matches, accountId), 'lastGameTimeStamp': matches[0]['timestamp'] + 1
+        **matches_merged_stat, 'lastGameTimeStamp': matches[0]['timestamp'] + 1
         }
     return result
   

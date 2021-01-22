@@ -65,7 +65,6 @@ def getStatsOfGameId(gameId, accountId):
     print(f'warning cloudnt find particpantId of gameId: {gameId}')
     return 0
 
-def getTotalStatsOfMatches(matches, accountId):
-  results = lolGamesStats.getStatResultsFromWorkerThreads(matches, accountId)
-  return lolGamesStats.calculateMergedStatsResults(results)
+def getMatchesStats(matches, accountId):
+ return lolGamesStats.getStatResultsFromWorkerThreads(matches, accountId)
  

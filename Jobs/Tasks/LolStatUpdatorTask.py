@@ -3,6 +3,8 @@ from lolutils import lolApiUtils
 from queue import Queue
 from threading import Thread
 import sotrageutils
+from statsUtils import lolStatsMerger
+import traceback
 
 class LolStatUpdatorTask:
   def execute(self):
@@ -10,7 +12,8 @@ class LolStatUpdatorTask:
     results = self.getSummonersStats(summonersData)
     newSummonersData = self.getNewSummonerData(summonersData, results)
     self.updateToDBIfNotEmptyData(newSummonersData)
-
+    self.shareAnnouncmentMessagesInDB(results)
+    
   def getSummonersStats(self, summonersData):
     queue = Queue(maxsize=0)
     numberOfThreads = min(30, len(summonersData))
@@ -32,20 +35,25 @@ class LolStatUpdatorTask:
       summonerData = work[1]
       matches = lolApiUtils.getMatchesByAccountId(summonerData[0], summonerData[4])
       if matches != None and len(matches) > 0:
-        apiResult = lolApiUtils.getTotalStatsOfMatches(matches, summonerData[0])
-        result = {
-          **apiResult,
-          'lastGameTimeStamp': matches[0]['timestamp'] + 1,
-          'accountId': summonerData[0]
-        }
-        results[work[0]] = result
+        try: 
+          matches_stats = lolApiUtils.getMatchesStats(matches, summonerData[0])
+          matches_merged_stat = lolStatsMerger.mergeGamesStats(matches_stats)
+          result = {
+            **matches_merged_stat,
+            'lastGameTimeStamp': matches[0]['timestamp'] + 1,
+            'accountId': summonerData[0]
+          }
+          results[work[0]] = {'totalStatsResult': result, 'matchesStats': matches_stats}
+        except:
+          print('error happened while updating player stats!')
+          traceback.print_exc()
       
   def getNewSummonerData(self, summonersData, results):
     newSummonersData = []
     for i in range(len(summonersData)):
-      result = results[i]
-      if result == None:
+      if results[i] == None:
         continue
+      result = results[i]['totalStatsResult']
       summonerData = summonersData[i]
       newSummonersData.append({
         'kills': result['total_kills'] + summonerData[1],
@@ -70,3 +78,13 @@ class LolStatUpdatorTask:
       print('updating db!')
       dbutils.updateSummonersData(newSummonersData)
       sotrageutils.updateCache()
+  
+  def shareAnnouncmentMessagesInDB(self, results):
+    print('share annoucnment not yet implemented brother.')
+    # results[i] == None
+    # messages = []
+    # for i in range(len(results)):
+    #   matchesStats = result[i]['matchesStats']
+    #   for matchStat in matchesStats:
+        
+      
