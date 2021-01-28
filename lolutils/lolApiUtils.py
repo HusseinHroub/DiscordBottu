@@ -60,10 +60,13 @@ def getStatsOfGameId(gameId, accountId):
   match_details = getJsonResponseOfUrl(f'{root_url}/match/v4/matches/{gameId}?api_key={api_key}')
   particpantId = getParticpantIdOfGameDetails(match_details, accountId)
   if particpantId != -1:
-    return match_details['participants'][particpantId - 1]['stats']    
+    particpantDetails = match_details['participants'][particpantId - 1]
+    stats = particpantDetails['stats'] 
+    stats['championId'] = particpantDetails['championId']
+    stats['queueId'] = match_details['queueId']
+    return stats    
   else:
-    print(f'warning cloudnt find particpantId of gameId: {gameId}')
-    return 0
+    raise Exception(f'Error cloudnt find particpantId of gameId: {gameId}')
 
 def getMatchesStats(matches, accountId):
  return lolGamesStats.getStatResultsFromWorkerThreads(matches, accountId)

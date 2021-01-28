@@ -7,6 +7,7 @@ from statsUtils import lolStatsMerger
 import traceback
 import discord
 import asyncio
+from lolutils import constants
 
 class LolStatUpdatorTask:
   def __init__(self, channel, loop):
@@ -106,10 +107,28 @@ class LolStatUpdatorTask:
         if matchStat['assists'] > 19:
           messages.append({'name': 'Assists', 'value': matchStat["assists"]})
         if len(messages) > 0:
-          self.shareStatMessageInChannel(summonerData[8], messages)
+          meta_data = self.get_match_meta_data(matchStat)  
+          self.shareStatMessageInChannel(summonerData[8], messages, meta_data)
 
-  def shareStatMessageInChannel(self, playerName, messages):
-    embed=discord.Embed(title='Today News!', description=f'One of {playerName} games he got:', color=0x27966b)
+  def get_match_meta_data(self, matchStat):
+    fields = []
+    if matchStat['queueId'] in constants.QUEUE_ID_GAME_TYPE_MAPPING:
+      fields.append({'name': 'Game Type', 'value': constants.QUEUE_ID_GAME_TYPE_MAPPING[matchStat['queueId']]})
+    result = {'fields': fields}
+    if matchStat['championId'] in constants.CHAMPIONS_DATA:
+      champion_data = constants.CHAMPIONS_DATA[matchStat['championId']]
+      fields.append({'name': 'Champion', 'value': champion_data['name']})
+      icon = constants.CHAMPION_ROOT_IMAGE_PATH_URL + champion_data['icon']
+      result['icon'] = icon
+    return result
+
+
+  def shareStatMessageInChannel(self, playerName, messages, meta_data):
+    embed=discord.Embed(title='Today News!', description=f'Following highlights from one of "{playerName}" games:', color=0x27966b)
+    if 'icon' in meta_data:
+      embed.set_thumbnail(url=meta_data['icon'])
+    for data in meta_data['fields']:
+      embed.add_field(name=data['name'], value=data['value'], inline=True)
     for message in messages:
       embed.add_field(name=message['name'], value=message['value'], inline=True)
     asyncio.run_coroutine_threadsafe(self.channel.send(embed=embed), self.loop)
