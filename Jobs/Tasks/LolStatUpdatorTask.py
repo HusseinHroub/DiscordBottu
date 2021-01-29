@@ -118,8 +118,8 @@ class LolStatUpdatorTask:
         if matchStat['queueId'] in constants.QUEUE_ID_GAME_TYPE_MAPPING:
             fields.append({'name': 'Game Type', 'value': constants.QUEUE_ID_GAME_TYPE_MAPPING[matchStat['queueId']]})
         result = {'fields': fields}
-        if matchStat['championId'] in constants.CHAMPIONS_DATA:
-            champion_data = constants.CHAMPIONS_DATA[matchStat['championId']]
+        if str(matchStat['championId']) in constants.CHAMPIONS_DATA:
+            champion_data = constants.CHAMPIONS_DATA[str(matchStat['championId'])]
             fields.append({'name': 'Champion', 'value': champion_data['name']})
             icon = constants.CHAMPION_ROOT_IMAGE_PATH_URL + champion_data['icon']
             result['icon'] = icon
