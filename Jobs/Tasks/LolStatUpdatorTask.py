@@ -1,13 +1,15 @@
-import dbutils
-from lolutils import lolApiUtils
+import asyncio
+import traceback
 from queue import Queue
 from threading import Thread
-import sotrageutils
-from statsUtils import lolStatsMerger
-import traceback
+
 import discord
-import asyncio
+
+import dbutils
+import sotrageutils
 from lolutils import constants
+from lolutils import lolApiUtils
+from statsUtils import lolStatsMerger
 
 
 class LolStatUpdatorTask:

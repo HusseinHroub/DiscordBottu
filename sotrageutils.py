@@ -1,5 +1,5 @@
-import dbutils
 import cacheutils
+import dbutils
 
 
 def updateCache():

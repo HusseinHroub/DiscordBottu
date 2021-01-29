@@ -1,6 +1,8 @@
-import sotrageutils
-import discord
 import asyncio
+
+import discord
+
+import sotrageutils
 
 
 class LolAnnouncer:

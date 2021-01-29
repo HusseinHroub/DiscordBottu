@@ -1,8 +1,9 @@
-import requests
 import os
+
 from ratelimit import limits, sleep_and_retry
+
 from lolutils import lolGamesStats
-import time
+from requestUtls import utils
 
 region = 'euw1'
 api_key = os.getenv('LAPIKEY')
@@ -10,7 +11,6 @@ root_url = f'https://{region}.api.riotgames.com/lol'
 
 CALLS_NUMBER = 80
 CALLS_PERIOD = 120
-RETRYING_ATTEMPS = 3
 
 
 @sleep_and_retry
@@ -21,20 +21,8 @@ def getJsonResponseOfUrl(url):
 
 @sleep_and_retry
 @limits(calls=15, period=2)
-def doGetJsonResponseOfUrl(url, retryingAttemps=RETRYING_ATTEMPS):
-    response = requests.get(url)
-    status_code = response.status_code
-    if status_code == 200:
-        return response.json()
-    if status_code == 404:
-        return None
-
-    print(f'got {status_code} status Code, retrying attemps = {retryingAttemps}')
-    if retryingAttemps < 1:
-        raise Exception(f'Tried to retry the request to avoid {status_code} but failed')
-    print(f'sleeping for {RETRYING_ATTEMPS - retryingAttemps + 1} seconds then will retry')
-    time.sleep(RETRYING_ATTEMPS - retryingAttemps + 1)
-    return doGetJsonResponseOfUrl(url, retryingAttemps - 1)
+def doGetJsonResponseOfUrl(url):
+    return utils.getHTTPJsonResponse(url)
 
 
 def getAccountIdByName(name):

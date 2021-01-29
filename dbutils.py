@@ -1,5 +1,6 @@
-import mysql.connector
 import os
+
+import mysql.connector
 
 TABLE_NAME = 'SummonerData'
 ACCOUNT_ID = 'accountId'

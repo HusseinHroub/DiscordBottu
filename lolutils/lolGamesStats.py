@@ -1,6 +1,7 @@
-from lolutils import lolApiUtils
 from queue import Queue
 from threading import Thread
+
+from lolutils import lolApiUtils
 
 
 def getTotalStatsOfMatches(matches, accountId):

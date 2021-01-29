@@ -1,16 +1,20 @@
-# Discord bot V1
+# Discord bot V2
 
-import discord
+import asyncio
 import os
-import Commands.CommandsFactory as CommandsFactory
-from keep_alive import keep_alive
 import shlex
 import traceback
-from Jobs.JobScheduler import JobScheduler
+
+import discord
+
+import Commands.CommandsFactory as CommandsFactory
 import sotrageutils
-from Jobs.Tasks.LolStatUpdatorTask import LolStatUpdatorTask
+from Jobs.JobScheduler import JobScheduler
 from Jobs.Tasks.LolAnnouncer import LolAnnouncer
-import asyncio
+from Jobs.Tasks.LolStatUpdatorTask import LolStatUpdatorTask
+from keep_alive import keep_alive
+from lolutils import constants
+from requestUtls import utils
 
 client = discord.Client()
 
@@ -31,6 +35,21 @@ async def on_ready():
     JobScheduler(LolStatUpdatorTask(client.get_channel(botChannelId),
                                     asyncio.get_running_loop()), 300).start()
     print('started two jobs bro!')
+    initChampionData()
+    print('initialized champion data')
+
+def initChampionData():
+    champ_data = utils.getHTTPJsonResponse('http://ddragon.leagueoflegends.com/cdn/11.2.1/data/en_US/champion.json')
+    data = champ_data['data']
+    keys = data.keys()
+    my_format = {}
+    for key in keys:
+        val = data[key]
+        my_format[val["key"]] = {
+            "name": val["name"],
+            "icon": val["image"]["full"]
+        }
+    constants.CHAMPIONS_DATA = my_format
 
 
 @client.event
