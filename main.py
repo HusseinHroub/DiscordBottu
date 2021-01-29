@@ -18,7 +18,7 @@ from requestUtls import utils
 
 client = discord.Client()
 
-botChannelId = 641925086055628801
+botChannelId = int(os.getenv('BOT_CHANNEL_ID'))
 
 
 def stringStringArray(stringArray):
