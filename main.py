@@ -21,7 +21,7 @@ client = discord.Client()
 botChannelId = int(os.getenv('BOT_CHANNEL_ID'))
 
 
-def stringStringArray(stringArray):
+def stripStringArray(stringArray):
     for i in range(len(stringArray)):
         stringArray[i] = stringArray[i].strip()
 
@@ -61,7 +61,7 @@ async def on_message(message):
     if messageContent.startswith('!l') or messageContent.startswith('!L'):
         try:
             fullCommand = shlex.split(messageContent)
-            stringStringArray(fullCommand)
+            stripStringArray(fullCommand)
             command = CommandsFactory.getCommand(fullCommand[0], fullCommand[1:])
             embedDescrption = command.execute()
         except Exception as e:
