@@ -2,6 +2,7 @@ from Commands.RegisterCommand import RegisterCommand
 from Commands.RankCommand import RankCommand
 from Commands.SortedListCommand import SortedListCommand
 from Commands.LeaveCommand import LeaveCommand
+from Commands.HelpCommand import HelpCommand
 
 
 def getCommand(command, commandArgs):
@@ -20,7 +21,8 @@ def getCommandObject(command, commandArgs):
         '!lrank': RankCommand(lowerCommandVersionArgs),
         '!ltop': SortedListCommand(command, lowerCommandVersionArgs),
         '!lworst': SortedListCommand(command, lowerCommandVersionArgs),
-        '!leave': LeaveCommand()
+        '!leave': LeaveCommand(),
+        '!lhelp': HelpCommand()
 
     }
     return switcher.get(command, None)
