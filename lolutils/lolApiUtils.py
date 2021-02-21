@@ -3,6 +3,7 @@ import os
 from ratelimit import limits, sleep_and_retry
 
 from lolutils import lolGamesStats
+from lolutils.constants import QUEUE_ID_GAME_TYPE_MAPPING
 from requestUtls import utils
 
 region = 'euw1'
@@ -32,9 +33,17 @@ def getAccountIdByName(name):
     return jsonResponse['accountId']
 
 
+def get_target_queues():
+    keys = ''
+    for key in QUEUE_ID_GAME_TYPE_MAPPING.keys():
+        keys += f'queue={key}&'
+    return keys
+
+
 def getMatchesByAccountId(accountId, beginTime=0):
     jsonResponse = getJsonResponseOfUrl(
-        f'{root_url}/match/v4/matchlists/by-account/{accountId}?api_key={api_key}&beginTime={beginTime}&endIndex=30')
+        f'{root_url}/match/v4/matchlists/by-account/{accountId}?api_key={api_key}&beginTime={beginTime}&endIndex=30&{get_target_queues()}')
+    print(jsonResponse['matches'])
     return None if jsonResponse == None else jsonResponse['matches']
 
 
