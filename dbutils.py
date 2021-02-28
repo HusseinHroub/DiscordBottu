@@ -4,7 +4,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import sessionmaker
 
 from db_low_level import engine, SummonerData, CommonTable
-from models import SummonerDataModel, CommonTableModel
+from models import SummonerDataModel
 
 Session = sessionmaker(bind=engine)
 
@@ -53,10 +53,9 @@ def getAllSummonerData(session) -> List[SummonerDataModel]:
 def updateSummonerNameByAccountId(accountId, summonerName=None, session=None):
     session.query(SummonerData).filter(SummonerData.accountId == accountId).update({'name': summonerName})
 
-def getCommonTableRow(key, session):
-    commonTableModel = CommonTableModel()
-    commonTableModel.buildWithDataObject(session.query(CommonTable).filter_by(key=key).one())
-    return commonTableModel
+
+def getCommonTableValue(key, session):
+    return session.query(CommonTable.value).filter_by(key=key).one().value
 
 
 def updateCommonTableRow(key, value, session):

@@ -19,7 +19,7 @@ def getSummonersSortedByStat(statType):
 
 @dbutils.SessionManager
 def getRecentTopPlayer(session):
-    return dbutils.getCommonTableRow('recentTopSummoner', session)
+    return dbutils.getCommonTableValue('recentTopSummoner', session)
 
 
 def getTopKillsList():
@@ -63,4 +63,4 @@ def markMonthAnnouncedValue(new_value, session):
 
 @dbutils.SessionManager
 def updateAnnouncedMonthValue(session):
-    cacheutils.markMonthAnnouncedValue(dbutils.getCommonTableRow('monthAnnouncedValue', session))
+    cacheutils.markMonthAnnouncedValue(dbutils.getCommonTableValue('monthAnnouncedValue', session))

@@ -30,6 +30,7 @@ class LolStatUpdatorTask:
                 self.shareTopPlayersStatsPerCategory()
                 dbutils.resetStats(session)
                 sotrageutils.markMonthAnnouncedValue('True')
+                session.commit()
                 sotrageutils.updateStatCache()
         else:
             if sotrageutils.getMonthAnnouncedValue() == 'True':
