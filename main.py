@@ -33,7 +33,7 @@ async def on_ready():
     # JobScheduler(LolAnnouncer(client.get_channel(botChannelId),
     #                           asyncio.get_running_loop()), 3600).start()
     JobScheduler(LolStatUpdatorTask(client.get_channel(botChannelId),
-                                    asyncio.get_running_loop()), 10).start()
+                                    asyncio.get_running_loop()), 300).start()
     print('started two jobs bro!')
     initChampionData()
     print('initialized champion data')
