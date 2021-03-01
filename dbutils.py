@@ -1,26 +1,41 @@
 from typing import List
 
 from sqlalchemy import func
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Session
 
 from db_low_level import engine, SummonerData, CommonTable
 from models import SummonerDataModel
 
-Session = sessionmaker(bind=engine)
+MySession = sessionmaker(bind=engine)
 
 
 def SessionManager(func):
-    def wrap(*args):
-        session = Session()
-        try:
-            result = func(*args, session=session)
-            session.commit()
-            return result
-        except:
-            session.rollback()
-            raise
-        finally:
-            session.close()
+    def wrap(*args, **kwargs):
+        if (len(args) > 0):
+            if (not isinstance(args[len(args) - 1], Session)):
+                session = MySession()
+                try:
+                    result = func(*args, session, **kwargs)
+                    session.commit()
+                    return result
+                except:
+                    session.rollback()
+                    raise
+                finally:
+                    session.close()
+        elif ('session' not in kwargs):
+            session = MySession()
+            kwargs['session'] = session
+            try:
+                result = func(*args, **kwargs)
+                session.commit()
+                return result
+            except:
+                session.rollback()
+                raise
+            finally:
+                session.close()
+        return func(*args, **kwargs)
 
     return wrap
 

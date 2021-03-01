@@ -11,6 +11,7 @@ import Commands.CommandsFactory as CommandsFactory
 import sotrageutils
 from Jobs.JobScheduler import JobScheduler
 from Jobs.Tasks.LolStatUpdatorTask import LolStatUpdatorTask
+from dbutils import SessionManager
 from keep_alive import keep_alive
 from lolutils import constants
 from requestUtls import utils
@@ -27,17 +28,21 @@ def stripStringArray(stringArray):
 
 @client.event
 async def on_ready():
-    sotrageutils.updateStatCache()
-    sotrageutils.updateAnnouncedMonthValue()
-    print('Updated cache')
+    updateCaches()
     # JobScheduler(LolAnnouncer(client.get_channel(botChannelId),
     #                           asyncio.get_running_loop()), 3600).start()
     JobScheduler(LolStatUpdatorTask(client.get_channel(botChannelId),
-                                    asyncio.get_running_loop()), 300).start()
+                                    asyncio.get_running_loop()), 10).start()
     print('started two jobs bro!')
     initChampionData()
     print('initialized champion data')
 
+
+@SessionManager
+def updateCaches(session):
+    sotrageutils.updateStatCache(session)
+    sotrageutils.updateAnnouncedMonthValue(session)
+    print('Updated cache')
 
 def initChampionData():
     champ_data = utils.getHTTPJsonResponse('http://ddragon.leagueoflegends.com/cdn/11.2.1/data/en_US/champion.json')

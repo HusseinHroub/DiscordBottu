@@ -29,12 +29,13 @@ class LolStatUpdatorTask:
             if sotrageutils.getMonthAnnouncedValue() == 'False':
                 self.shareTopPlayersStatsPerCategory()
                 dbutils.resetStats(session)
-                sotrageutils.markMonthAnnouncedValue('True')
+                sotrageutils.markMonthAnnouncedValue('True', session)
+                sotrageutils.updateStatCache(session)
                 session.commit()
-                sotrageutils.updateStatCache()
         else:
             if sotrageutils.getMonthAnnouncedValue() == 'True':
-                sotrageutils.markMonthAnnouncedValue('False')
+                sotrageutils.markMonthAnnouncedValue('False', session)
+                session.commit()
 
     def startUpdateProcess(self, session):
         summonersDatabaseResults = dbutils.getAllSummonerData(session)
@@ -109,7 +110,7 @@ class LolStatUpdatorTask:
         if newSummonersData != None and len(newSummonersData) > 0:
             print('updating db!')
             session.bulk_update_mappings(dbutils.SummonerData, newSummonersData)
-            sotrageutils.updateStatCache()
+            sotrageutils.updateStatCache(session)
 
     def shareAnnouncmentMessagesInDB(self, results, summonersData):
         for i in range(len(results)):
