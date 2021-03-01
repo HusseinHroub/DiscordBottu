@@ -4,7 +4,7 @@ import discord
 
 import sotrageutils
 
-
+#Not working as expected! check line 16, it returns the value not the tuple..
 class LolAnnouncer:
 
     def __init__(self, channel, loop):
@@ -12,7 +12,7 @@ class LolAnnouncer:
         self.loop = loop
 
     def execute(self):
-        topSummoner = sotrageutils.getKDAList()[0]
+        topSummoner = sotrageutils.getTopKDAList()[0]
         recentTopSummonerName = sotrageutils.getRecentTopPlayer()
         if recentTopSummonerName == None or topSummoner[0] != recentTopSummonerName[0]:
             recentTopSummonerName = topSummoner[0]

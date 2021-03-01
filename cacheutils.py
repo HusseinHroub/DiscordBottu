@@ -8,6 +8,7 @@ topAssists = []
 topAvgKda = []
 topFarms = []
 topTotalGames = []
+monthAnnounceValue = False
 
 
 def getSummonersSortedByStat(stats):
@@ -45,6 +46,6 @@ def updateSortedLists(newTopKills, newTopDeaths, newTopAssists, newTopAvgKda, ne
     topFarms = newTopFarms
     topTotalGames = newTopTotalGames
 
-
-def getKDAList():
-    return topAvgKda
+def markMonthAnnouncedValue(new_value):
+    global monthAnnounceValue
+    monthAnnounceValue = new_value

@@ -2,7 +2,7 @@ import cacheutils
 import dbutils
 
 
-def updateCache():
+def updateStatCache():
     topKills = dbutils.getSummonersSortedByStat('kills')
     topDeaths = dbutils.getSummonersSortedByStat('deaths', False)
     topAssists = dbutils.getSummonersSortedByStat('assists')
@@ -17,12 +17,45 @@ def getSummonersSortedByStat(statType):
 
 
 def getRecentTopPlayer():
-    return dbutils.getRecentTopPlayer()
+    return dbutils.getCommonTableRow('recentTopSummoner')
 
 
-def getKDAList():
-    return cacheutils.getKDAList()
+def getTopKillsList():
+    return cacheutils.topKills
+
+
+def getTopDeathsList():
+    return cacheutils.topDeaths
+
+
+def getTopAssistsList():
+    return cacheutils.topAssists
+
+
+def getTopFarmsList():
+    return cacheutils.topFarms
+
+
+def getTopGamesList():
+    return cacheutils.topTotalGames
+
+
+def getTopKDAList():
+    return cacheutils.topAvgKda
 
 
 def updateRecentTopPlayer(summonerName):
-    dbutils.updateRecentTopPlayer(summonerName)
+    dbutils.updateCommonTableRow('recentTopSummoner', summonerName)
+
+
+def getMonthAnnouncedValue():
+    return cacheutils.monthAnnounceValue
+
+
+def markMonthAnnouncedValue(new_value):
+    dbutils.updateCommonTableRow('monthAnnouncedValue', new_value)
+    cacheutils.markMonthAnnouncedValue(new_value)
+
+
+def updateAnnouncedMonthValue():
+    cacheutils.markMonthAnnouncedValue(dbutils.getCommonTableRow('monthAnnouncedValue'))
