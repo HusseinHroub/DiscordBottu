@@ -1,4 +1,4 @@
-# Discord bot V2
+# Discord bot V3
 
 import asyncio
 import os
@@ -10,7 +10,6 @@ import discord
 import Commands.CommandsFactory as CommandsFactory
 import sotrageutils
 from Jobs.JobScheduler import JobScheduler
-from Jobs.Tasks.LolAnnouncer import LolAnnouncer
 from Jobs.Tasks.LolStatUpdatorTask import LolStatUpdatorTask
 from keep_alive import keep_alive
 from lolutils import constants
@@ -28,15 +27,17 @@ def stripStringArray(stringArray):
 
 @client.event
 async def on_ready():
-    sotrageutils.updateCache()
+    sotrageutils.updateStatCache()
+    sotrageutils.updateAnnouncedMonthValue()
     print('Updated cache')
-    JobScheduler(LolAnnouncer(client.get_channel(botChannelId),
-                              asyncio.get_running_loop()), 3600).start()
+    # JobScheduler(LolAnnouncer(client.get_channel(botChannelId),
+    #                           asyncio.get_running_loop()), 3600).start()
     JobScheduler(LolStatUpdatorTask(client.get_channel(botChannelId),
                                     asyncio.get_running_loop()), 300).start()
     print('started two jobs bro!')
     initChampionData()
     print('initialized champion data')
+
 
 def initChampionData():
     champ_data = utils.getHTTPJsonResponse('http://ddragon.leagueoflegends.com/cdn/11.2.1/data/en_US/champion.json')

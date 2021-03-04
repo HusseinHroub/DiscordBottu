@@ -48,23 +48,16 @@ class AccountIdExistQuery:
 
 
 class InsertSummonerQuery:
-    def __init__(self, accountId, summonerName, kills, deaths, assists, lastGameTimeStamp, farms, avgKda,
-                 numberOfGames):
+    def __init__(self, accountId, summonerName, lastGameTimeStamp):
         self.accountId = accountId
         self.summonerName = summonerName
-        self.kills = kills
-        self.deaths = deaths
-        self.assists = assists
         self.lastGameTimeStamp = lastGameTimeStamp
-        self.farms = farms
-        self.avgKda = avgKda
-        self.numberOfGames = numberOfGames
 
     def execute(self, mydb):
         mycursor = mydb.cursor()
         sql = f"INSERT INTO {TABLE_NAME} ({ACCOUNT_ID}, {NAME}, {KILLS}, {DEATHS}, {ASSISTS}, {FARMS}, {AVG_KDA}, {TOTAL_GAMES}, {LAST_GAME_TIME_STAMP}) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-        val = (self.accountId, self.summonerName, self.kills, self.deaths, self.assists, self.farms, self.avgKda,
-               self.numberOfGames, self.lastGameTimeStamp)
+        val = (self.accountId, self.summonerName, 0, 0, 0, 0, 0,
+               0, self.lastGameTimeStamp)
         mycursor.execute(sql, val)
         mydb.commit()
         mycursor.close()
@@ -111,24 +104,27 @@ class UpdateSummonersDataQuery:
         mycursor.close()
 
 
-class GetRecentTopPlayerQuery:
+class GetCommonTableRow:
+    def __init__(self, key):
+        self.key = key
+
     def execute(self, mydb):
         mycursor = mydb.cursor()
-        mycursor.execute(f"SELECT {VALUE} FROM {COMMON_TABLE_NAME} WHERE {KEY} = 'recentTopSummoner'")
+        mycursor.execute(f"SELECT {VALUE} FROM {COMMON_TABLE_NAME} WHERE {KEY} = '{self.key}'")
         data = mycursor.fetchone()
         mycursor.close()
-        return data
+        return data[0]
 
 
-class UpdateRecentTopSummonerQuery:
-    def __init__(self, summonerName):
-        self.summonerName = summonerName
+class UpdateCommonTableRow:
+    def __init__(self, key, value):
+        self.key = key
+        self.value = value
 
     def execute(self, mydb):
         mycursor = mydb.cursor()
-        sql = f"UPDATE {COMMON_TABLE_NAME} SET {VALUE} = %s WHERE {KEY} = 'recentTopSummoner'"
-        val = (self.summonerName,)
-        mycursor.execute(sql, val)
+        sql = f"UPDATE {COMMON_TABLE_NAME} SET {VALUE} = '{self.value}' WHERE {KEY} = '{self.key}'"
+        mycursor.execute(sql)
         mydb.commit()
         mycursor.close()
 
@@ -143,6 +139,15 @@ class UpdateSummonerByAccountIdQuery:
         sql = f"UPDATE {TABLE_NAME} SET {NAME} = %s WHERE {ACCOUNT_ID} = %s"
         val = (self.summonerName, self.accountId)
         mycursor.execute(sql, val)
+        mydb.commit()
+        mycursor.close()
+
+
+class ResetStats:
+    def execute(self, mydb):
+        mycursor = mydb.cursor()
+        sql = f"UPDATE {TABLE_NAME} SET {KILLS} = 0, {DEATHS} = 0, {ASSISTS} = 0, {FARMS} = 0, {AVG_KDA} = 0, {TOTAL_GAMES} = 0"
+        mycursor.execute(sql)
         mydb.commit()
         mycursor.close()
 
@@ -164,10 +169,9 @@ def isAccountIdExist(accountId):
     return connectionWrapper(AccountIdExistQuery(accountId))
 
 
-def insertSummoner(accountId, summonerName, kills, deaths, assists, lastGameTimeStamp, farms, avgKda, numberOfGames):
+def insertSummoner(accountId, summonerName, lastGameTimeStamp):
     return connectionWrapper(
-        InsertSummonerQuery(accountId, summonerName, kills, deaths, assists, lastGameTimeStamp, farms, avgKda,
-                            numberOfGames))
+        InsertSummonerQuery(accountId, summonerName, lastGameTimeStamp))
 
 
 def getSummonersSortedByStat(stats, desc=True):
@@ -186,9 +190,13 @@ def updateSummonersData(summonersData):
     return connectionWrapper(UpdateSummonersDataQuery(summonersData))
 
 
-def getRecentTopPlayer():
-    return connectionWrapper(GetRecentTopPlayerQuery())
+def getCommonTableRow(key):
+    return connectionWrapper(GetCommonTableRow(key))
 
 
-def updateRecentTopPlayer(summonerName):
-    connectionWrapper(UpdateRecentTopSummonerQuery(summonerName))
+def updateCommonTableRow(key, value):
+    connectionWrapper(UpdateCommonTableRow(key, value))
+
+
+def resetStats():
+    connectionWrapper(ResetStats())

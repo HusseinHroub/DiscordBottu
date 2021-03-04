@@ -1,5 +1,7 @@
 import asyncio
+import calendar
 import traceback
+from datetime import datetime
 from queue import Queue
 from threading import Thread
 
@@ -18,6 +20,21 @@ class LolStatUpdatorTask:
         self.loop = loop
 
     def execute(self):
+        self.resetStatsIfStartOfMonth()
+        self.startUpdateProcess()
+
+    def resetStatsIfStartOfMonth(self):
+        if datetime.today().day == 1:
+            if sotrageutils.getMonthAnnouncedValue() == 'False':
+                self.shareTopPlayersStatsPerCategory()
+                dbutils.resetStats()
+                sotrageutils.markMonthAnnouncedValue('True')
+                sotrageutils.updateStatCache()
+        else:
+            if sotrageutils.getMonthAnnouncedValue() == 'True':
+                sotrageutils.markMonthAnnouncedValue('False')
+
+    def startUpdateProcess(self):
         summonersData = dbutils.getAllSummonerData()
         results = self.getSummonersStats(summonersData)
         newSummonersData = self.getNewSummonerData(summonersData, results)
@@ -27,7 +44,7 @@ class LolStatUpdatorTask:
     def getSummonersStats(self, summonersData):
         queue = Queue(maxsize=0)
         numberOfThreads = min(30, len(summonersData))
-        results = [None for x in summonersData];
+        results = [None for x in summonersData]
         for i in range(len(summonersData)):
             queue.put((i, summonersData[i]))
         threads = []
@@ -87,7 +104,7 @@ class LolStatUpdatorTask:
         if newSummonersData != None and len(newSummonersData) > 0:
             print('updating db!')
             dbutils.updateSummonersData(newSummonersData)
-            sotrageutils.updateCache()
+            sotrageutils.updateStatCache()
 
     def shareAnnouncmentMessagesInDB(self, results, summonersData):
         for i in range(len(results)):
@@ -135,3 +152,34 @@ class LolStatUpdatorTask:
         for message in messages:
             embed.add_field(name=message['name'], value=message['value'], inline=True)
         asyncio.run_coroutine_threadsafe(self.channel.send(embed=embed), self.loop)
+
+    def shareTopPlayersStatsPerCategory(self):
+        topKillsSummoner = sotrageutils.getTopKillsList()[0]
+        topDeathsSummoner = sotrageutils.getTopDeathsList()[0]
+        topAssistsSummoner = sotrageutils.getTopAssistsList()[0]
+        topFarmsSummoner = sotrageutils.getTopFarmsList()[0]
+        topGamesSummoner = sotrageutils.getTopAssistsList()[0]
+        topKDASummoner = sotrageutils.getTopKDAList()[0]
+
+        embed = discord.Embed(title='Today News!',
+                              description=f'All summoners stats are reseted to zeros, and below are the top summoners of previous month ({self.getPrevMonthName()}):',
+                              color=0x27966b)
+        self.addTopEmbedFiled(embed, 'Kills', topKillsSummoner[0], topKillsSummoner[1])
+        self.addTopEmbedFiled(embed, 'Deaths', topDeathsSummoner[0], topDeathsSummoner[1])
+        self.addTopEmbedFiled(embed, 'Assists', topAssistsSummoner[0], topAssistsSummoner[1])
+        self.addTopEmbedFiled(embed, 'Farms', topFarmsSummoner[0], topFarmsSummoner[1])
+        self.addTopEmbedFiled(embed, 'Games Count', topGamesSummoner[0], topGamesSummoner[1])
+        self.addTopEmbedFiled(embed, 'Average KDA', topKDASummoner[0], topKDASummoner[1])
+        asyncio.run_coroutine_threadsafe(self.channel.send(embed=embed), self.loop)
+
+    def addTopEmbedFiled(self, embed, category, summonerName, topValue):
+        embed.add_field(name=f'Top {category}', value=f'{summonerName} with {topValue} {category.lower()}',
+                        inline=False)
+
+    def getPrevMonthName(self):
+        month_number = datetime.today().month
+        if month_number == 1:
+            month_number = 12
+        else:
+            month_number = month_number - 1
+        return calendar.month_name[month_number]

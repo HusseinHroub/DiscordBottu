@@ -42,7 +42,7 @@ def get_target_queues():
 
 def getMatchesByAccountId(accountId, beginTime=0):
     jsonResponse = getJsonResponseOfUrl(
-        f'{root_url}/match/v4/matchlists/by-account/{accountId}?api_key={api_key}&beginTime={beginTime}&endIndex=30&{get_target_queues()}')
+        f'{root_url}/match/v4/matchlists/by-account/{accountId}?api_key={api_key}&beginTime={beginTime}&{get_target_queues()}')
     return None if jsonResponse == None else jsonResponse['matches']
 
 
