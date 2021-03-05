@@ -2,13 +2,14 @@ import cacheutils
 import dbutils
 
 
-def updateStatCache():
-    topKills = dbutils.getSummonersSortedByStat('kills')
-    topDeaths = dbutils.getSummonersSortedByStat('deaths', False)
-    topAssists = dbutils.getSummonersSortedByStat('assists')
-    topAvgKda = dbutils.getSummonersSortedByStat('avg_kda')
-    topFarms = dbutils.getSummonersSortedByStat('farms')
-    topTotalGames = dbutils.getSummonersSortedByStat('total_games')
+@dbutils.SessionManager
+def updateStatCache(session):
+    topKills = dbutils.getSummonersSortedByStat('kills', True, session)
+    topDeaths = dbutils.getSummonersSortedByStat('deaths', False, session)
+    topAssists = dbutils.getSummonersSortedByStat('assists', True, session)
+    topAvgKda = dbutils.getSummonersSortedByStat('avg_kda', True, session)
+    topFarms = dbutils.getSummonersSortedByStat('farms', True, session)
+    topTotalGames = dbutils.getSummonersSortedByStat('total_games', True, session)
     cacheutils.updateSortedLists(topKills, topDeaths, topAssists, topAvgKda, topFarms, topTotalGames)
 
 
@@ -16,8 +17,9 @@ def getSummonersSortedByStat(statType):
     return cacheutils.getSummonersSortedByStat(statType)
 
 
-def getRecentTopPlayer():
-    return dbutils.getCommonTableRow('recentTopSummoner')
+@dbutils.SessionManager
+def getRecentTopPlayer(session):
+    return dbutils.getCommonTableRow('recentTopSummoner', session)
 
 
 def getTopKillsList():
@@ -44,18 +46,21 @@ def getTopKDAList():
     return cacheutils.topAvgKda
 
 
-def updateRecentTopPlayer(summonerName):
-    dbutils.updateCommonTableRow('recentTopSummoner', summonerName)
+@dbutils.SessionManager
+def updateRecentTopPlayer(summonerName, session):
+    dbutils.updateCommonTableRow('recentTopSummoner', summonerName, session)
 
 
 def getMonthAnnouncedValue():
     return cacheutils.monthAnnounceValue
 
 
-def markMonthAnnouncedValue(new_value):
-    dbutils.updateCommonTableRow('monthAnnouncedValue', new_value)
+@dbutils.SessionManager
+def markMonthAnnouncedValue(new_value, session):
+    dbutils.updateCommonTableRow('monthAnnouncedValue', new_value, session)
     cacheutils.markMonthAnnouncedValue(new_value)
 
 
-def updateAnnouncedMonthValue():
-    cacheutils.markMonthAnnouncedValue(dbutils.getCommonTableRow('monthAnnouncedValue'))
+@dbutils.SessionManager
+def updateAnnouncedMonthValue(session):
+    cacheutils.markMonthAnnouncedValue(dbutils.getCommonTableRow('monthAnnouncedValue', session))
