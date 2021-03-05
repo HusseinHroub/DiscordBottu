@@ -35,13 +35,13 @@ class LolStatUpdatorTask:
                 sotrageutils.markMonthAnnouncedValue('False')
 
     def startUpdateProcess(self):
-        summonersData = dbutils.getAllSummonerData()
-        results = self.getSummonersStats(summonersData)
-        newSummonersData = self.getNewSummonerData(summonersData, results)
-        self.updateToDBIfNotEmptyData(newSummonersData)
-        self.shareAnnouncmentMessagesInDB(results, summonersData)
+        summonersDatabaseResults = dbutils.getAllSummonerData()
+        summonersLolAPIResults = self.getSummonersAPIStats(summonersDatabaseResults)
+        summonersMergedResults = self.mergeSummonersDataBaseAndAPIResults(summonersDatabaseResults, summonersLolAPIResults)
+        self.updateToDBIfNotEmptyData(summonersMergedResults)
+        self.shareAnnouncmentMessagesInDB(summonersLolAPIResults, summonersDatabaseResults)
 
-    def getSummonersStats(self, summonersData):
+    def getSummonersAPIStats(self, summonersData):
         queue = Queue(maxsize=0)
         numberOfThreads = min(30, len(summonersData))
         results = [None for x in summonersData]
@@ -75,7 +75,7 @@ class LolStatUpdatorTask:
                     print('error happened while updating player stats!')
                     traceback.print_exc()
 
-    def getNewSummonerData(self, summonersData, results):
+    def mergeSummonersDataBaseAndAPIResults(self, summonersData, results):
         newSummonersData = []
         for i in range(len(summonersData)):
             if results[i] == None:
