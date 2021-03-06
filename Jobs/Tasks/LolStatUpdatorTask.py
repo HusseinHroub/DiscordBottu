@@ -102,7 +102,7 @@ class LolStatUpdatorTask:
     def getKDAInfo(self, newKDA, oldKda, newCount, oldCount):
         totalCount = newCount + oldCount
         return {
-            'avg_kda': oldKda + (newKDA - oldKda) / totalCount,
+            'avg_kda': newKDA if oldCount == 0 else (oldKda + (newKDA - oldKda) / totalCount),
             'total_games': totalCount
         }
 
