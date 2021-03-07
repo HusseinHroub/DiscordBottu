@@ -27,15 +27,18 @@ class LolStatUpdatorTask:
     def resetStatsIfStartOfMonth(self, session):
         if datetime.today().day == 1:
             if sotrageutils.getMonthAnnouncedValue() == 'False':
-                self.shareTopPlayersStatsPerCategory()
-                dbutils.resetStats(session)
-                sotrageutils.markMonthAnnouncedValue('True', session)
-                sotrageutils.updateStatCache(session)
-                session.commit()
+                self.finalizeMonthStats(session)
         else:
             if sotrageutils.getMonthAnnouncedValue() == 'True':
                 sotrageutils.markMonthAnnouncedValue('False', session)
                 session.commit()
+
+    def finalizeMonthStats(self, session):
+        self.shareTopPlayersStatsPerCategory()
+        dbutils.resetStats(session)
+        sotrageutils.markMonthAnnouncedValue('True', session)
+        sotrageutils.updateStatCache(session)
+        session.commit()
 
     def startUpdateProcess(self, session):
         summonersDatabaseResults = dbutils.getAllSummonerData(session)
@@ -43,7 +46,7 @@ class LolStatUpdatorTask:
         summonersMergedResults = self.mergeSummonersDataBaseAndAPIResults(summonersDatabaseResults,
                                                                           summonersLolAPIResults)
         self.updateToDBIfNotEmptyData(summonersMergedResults, session)
-        self.shareAnnouncmentMessagesInDB(summonersLolAPIResults, summonersDatabaseResults)
+        self.shareSummonersMatchesStatsIfDeserved(summonersLolAPIResults, summonersDatabaseResults)
 
     def getSummonersAPIStats(self, summonersData):
         queue = Queue(maxsize=0)
@@ -68,36 +71,40 @@ class LolStatUpdatorTask:
                                                         summonerDataModel.lastGameTimeStamp)
             if matches != None and len(matches) > 0:
                 try:
-                    matches_stats = lolApiUtils.getMatchesStats(matches, summonerDataModel.accountId)
-                    matches_merged_stat = lolStatsMerger.mergeGamesStats(matches_stats)
-                    result = {
-                        **matches_merged_stat,
-                        'lastGameTimeStamp': matches[0]['timestamp'] + 1,
-                        'accountId': summonerDataModel.accountId
-                    }
-                    results[work[0]] = {'totalStatsResult': result, 'matchesStats': matches_stats}
+                    results[work[0]] = self.getSummonerMatchesData(matches, summonerDataModel.accountId)
                 except:
-                    print('error happened while updating player stats!')
+                    print(f'error happened while getting total stats of player with accountId: {summonerDataModel.accountId}')
                     traceback.print_exc()
+
+    def getSummonerMatchesData(self, matches, accountId):
+        matches_stats = lolApiUtils.getMatchesStats(matches, accountId)
+        matches_merged_stat = lolStatsMerger.mergeGamesStats(matches_stats)
+        result = {
+            **matches_merged_stat,
+            'lastGameTimeStamp': matches[0]['timestamp'] + 1,
+            'accountId': accountId
+        }
+        return {'totalStatsResult': result, 'matchesStats': matches_stats}
 
     def mergeSummonersDataBaseAndAPIResults(self, summonersData, results):
         newSummonersData = []
         for i in range(len(summonersData)):
             if results[i] == None:
                 continue
-            result = results[i]['totalStatsResult']
-            summonerDataModel = summonersData[i]
-            newSummonersData.append({
-                'kills': result['total_kills'] + summonerDataModel.kills,
-                'deaths': result['total_deaths'] + summonerDataModel.deaths,
-                'assists': result['total_assists'] + summonerDataModel.assists,
-                'farms': result['total_farms'] + summonerDataModel.farms,
-                'accountId': summonerDataModel.accountId,
-                'lastGameTimeStamp': result['lastGameTimeStamp'],
-                **self.getKDAInfo(result['avg_kda'], summonerDataModel.avg_kda, result['sample_count'],
-                                  summonerDataModel.total_games)
-            })
+            newSummonersData.append(self.mergeAPIResultAndSummonerDataModel(results[i]['totalStatsResult'], summonersData[i]))
         return newSummonersData
+
+    def mergeAPIResultAndSummonerDataModel(self, result, summonerDataModel):
+        return {
+            'kills': result['total_kills'] + summonerDataModel.kills,
+            'deaths': result['total_deaths'] + summonerDataModel.deaths,
+            'assists': result['total_assists'] + summonerDataModel.assists,
+            'farms': result['total_farms'] + summonerDataModel.farms,
+            'accountId': summonerDataModel.accountId,
+            'lastGameTimeStamp': result['lastGameTimeStamp'],
+            **self.getKDAInfo(result['avg_kda'], summonerDataModel.avg_kda, result['sample_count'],
+                              summonerDataModel.total_games)
+        }
 
     def getKDAInfo(self, newKDA, oldKda, newCount, oldCount):
         totalCount = newCount + oldCount
@@ -112,29 +119,36 @@ class LolStatUpdatorTask:
             session.bulk_update_mappings(dbutils.SummonerData, newSummonersData)
             sotrageutils.updateStatCache(session)
 
-    def shareAnnouncmentMessagesInDB(self, results, summonersData):
+    def shareSummonersMatchesStatsIfDeserved(self, results, summonersData):
         for i in range(len(results)):
             if results[i] == None:
                 continue
             matchesStats = results[i]['matchesStats']
             summonerDataModel = summonersData[i]
             for matchStat in matchesStats:
-                messages = []
-                if matchStat['kills'] > 19:
-                    messages.append({'name': 'Kills', 'value': matchStat["kills"]})
-                if matchStat['deaths'] > 14:
-                    messages.append({'name': 'Deaths (waaw!)', 'value': matchStat["deaths"]})
-                if matchStat['pentaKills'] > 0:
-                    messages.append({'name': 'PentaKills', 'value': matchStat["pentaKills"]})
-                if matchStat['quadraKills'] > 0:
-                    messages.append({'name': 'QuadraKills', 'value': matchStat["quadraKills"]})
-                if matchStat['doubleKills'] > 3:
-                    messages.append({'name': 'DoubleKills', 'value': matchStat["doubleKills"]})
-                if matchStat['assists'] > 19:
-                    messages.append({'name': 'Assists', 'value': matchStat["assists"]})
-                if len(messages) > 0:
-                    meta_data = self.get_match_meta_data(matchStat)
-                    self.shareStatMessageInChannel(summonerDataModel.name, messages, meta_data)
+                self.shareSummonerStatsIfDeserveAnAnnounce(matchStat, summonerDataModel.name)
+
+    def shareSummonerStatsIfDeserveAnAnnounce(self, matchStat, name):
+        statsNameAndValue = self.getStatsNameAndValueToBeAnnounced(matchStat)
+        if len(statsNameAndValue) > 0:
+            meta_data = self.get_match_meta_data(matchStat)
+            self.shareStatMessageInChannel(name, statsNameAndValue, meta_data)
+
+    def getStatsNameAndValueToBeAnnounced(self, matchStat):
+        messages = []
+        if matchStat['kills'] > 19:
+            messages.append({'name': 'Kills', 'value': matchStat["kills"]})
+        if matchStat['deaths'] > 14:
+            messages.append({'name': 'Deaths (waaw!)', 'value': matchStat["deaths"]})
+        if matchStat['pentaKills'] > 0:
+            messages.append({'name': 'PentaKills', 'value': matchStat["pentaKills"]})
+        if matchStat['quadraKills'] > 0:
+            messages.append({'name': 'QuadraKills', 'value': matchStat["quadraKills"]})
+        if matchStat['doubleKills'] > 3:
+            messages.append({'name': 'DoubleKills', 'value': matchStat["doubleKills"]})
+        if matchStat['assists'] > 19:
+            messages.append({'name': 'Assists', 'value': matchStat["assists"]})
+        return messages
 
     def get_match_meta_data(self, matchStat):
         fields = []
