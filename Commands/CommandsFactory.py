@@ -29,4 +29,4 @@ def getCommandObject(command, commandArgs):
 
 
 def getHelpMessage():
-    return 'Type !lhelp to see list of available commands'
+    return 'type !lhelp to see list of available commands'
