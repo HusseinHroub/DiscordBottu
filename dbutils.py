@@ -45,7 +45,7 @@ def isSummonerNameExist(summonerName, session):
 
 
 def isAccountIdExist(accountId, session):
-    return session.query(func.count(SummonerData.accountId)).filter_by(
+    return session.query(func.count(SummonerData.accountId)).filter(
         SummonerData.accountId == accountId).scalar() == 1
 
 
