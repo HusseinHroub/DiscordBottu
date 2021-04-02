@@ -41,11 +41,12 @@ def SessionManager(func):
 
 
 def isSummonerNameExist(summonerName, session):
-    return session.query(func.count(SummonerData.name)).filter_by(name=summonerName).scalar() == 1
+    return session.query(func.count(SummonerData.name)).filter(SummonerData.name == summonerName).scalar() == 1
 
 
 def isAccountIdExist(accountId, session):
-    return session.query(func.count(SummonerData.accountId)).filter_by(accountId=accountId).scalar() == 1
+    return session.query(func.count(SummonerData.accountId)).filter(
+        SummonerData.accountId == accountId).scalar() == 1
 
 
 def insertSummoner(accountId, summonerName, lastGameTimeStamp, session):
