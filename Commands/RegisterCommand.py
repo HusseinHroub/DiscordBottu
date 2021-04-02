@@ -17,7 +17,7 @@ class RegisterCommand:
                 f"Summoner name wasn't provided, here is an example on how to use this command\n!lregister \"3amo Draven\"")
         summonerName = self.commandArgs[0]
         if dbutils.isSummonerNameExist(summonerName.lower(), session):
-            raise AttributeError("Already have registered summoner with name {summonerName}")
+            raise AttributeError(f"Already have registered summoner with name {summonerName}")
         accountId = lolApiUtils.getAccountIdByName(summonerName)
         if (dbutils.isAccountIdExist(accountId, session)):
             dbutils.updateSummonerNameByAccountId(accountId, summonerName, session)

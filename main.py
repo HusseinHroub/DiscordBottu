@@ -19,7 +19,8 @@ from requestUtls import utils
 client = discord.Client()
 
 botChannelId = int(os.getenv('BOT_CHANNEL_ID'))
-
+GREEN = 0x27966b
+RED = 0xff3d3d
 
 def stripStringArray(stringArray):
     for i in range(len(stringArray)):
@@ -65,6 +66,7 @@ async def on_message(message):
 
     messageContent = message.content
     if messageContent.startswith('!l') or messageContent.startswith('!L'):
+        embedColor = GREEN
         try:
             fullCommand = shlex.split(messageContent)
             stripStringArray(fullCommand)
@@ -72,9 +74,10 @@ async def on_message(message):
             embedDescrption = command.execute()
         except Exception as e:
             embedDescrption = str(e)
+            embedColor = RED
             traceback.print_exc()
         if embedDescrption != None and embedDescrption != '':
-            embed = discord.Embed(description=embedDescrption, color=0x27966b)
+            embed = discord.Embed(description=embedDescrption, color=embedColor)
             await message.channel.send(embed=embed)
 
 
