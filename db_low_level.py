@@ -9,7 +9,7 @@ DB_PASSWORD = os.getenv('DBPASSWORD')
 DB_HOST = os.getenv('DBHOST')
 DB_MAIN_NAME = os.getenv('DBMAINDB')
 
-engine = create_engine(f'mysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_MAIN_NAME}', poolclass=NullPool)
+engine = create_engine(f'mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_MAIN_NAME}', poolclass=NullPool)
 Base = declarative_base()
 
 
