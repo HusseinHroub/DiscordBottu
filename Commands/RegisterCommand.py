@@ -13,14 +13,16 @@ class RegisterCommand:
     @dbutils.SessionManager
     def execute(self, session):
         if len(self.commandArgs) == 0:
-            return f"Error: summoner name wasn't provided, here is an example on how to use this command\n!lregister \"3amo Draven\""
+            raise ValueError(
+                f"Summoner name wasn't provided, here is an example on how to use this command\n!lregister \"3amo Draven\"")
         summonerName = self.commandArgs[0]
         if dbutils.isSummonerNameExist(summonerName.lower(), session):
-            return f"Already have registered summoner with name {summonerName}"
+            raise AttributeError("Already have registered summoner with name {summonerName}")
         accountId = lolApiUtils.getAccountIdByName(summonerName)
         if (dbutils.isAccountIdExist(accountId, session)):
             dbutils.updateSummonerNameByAccountId(accountId, summonerName, session)
-            return f'Summoner is already registered with old name, updated to the new provided name: {summonerName}'
+            raise AttributeError(
+                f'Summoner is already registered with old name, updated to the new provided name: {summonerName}')
         dbutils.insertSummoner(accountId, summonerName, self.getCurrentEpochTime(), session)
         self.updateCacheInAnotherThread()
         return f'Successfully registered {summonerName} in bot database'

@@ -178,7 +178,7 @@ class LolStatUpdatorTask:
         topDeathsSummoner = sotrageutils.getTopDeathsList()[0]
         topAssistsSummoner = sotrageutils.getTopAssistsList()[0]
         topFarmsSummoner = sotrageutils.getTopFarmsList()[0]
-        topGamesSummoner = sotrageutils.getTopAssistsList()[0]
+        topGamesSummoner = sotrageutils.getTopGamesList()[0]
         topKDASummoner = sotrageutils.getTopKDAList()[0]
 
         embed = discord.Embed(title='Today News!',

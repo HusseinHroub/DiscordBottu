@@ -2,13 +2,14 @@ import os
 
 from sqlalchemy import Column, Integer, Float, VARCHAR, BIGINT, create_engine
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.pool import NullPool
 
 DB_USER = os.getenv('DBUSER')
 DB_PASSWORD = os.getenv('DBPASSWORD')
 DB_HOST = os.getenv('DBHOST')
 DB_MAIN_NAME = os.getenv('DBMAINDB')
 
-engine = create_engine(f'mysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_MAIN_NAME}')
+engine = create_engine(f'mysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_MAIN_NAME}', poolclass=NullPool)
 Base = declarative_base()
 
 

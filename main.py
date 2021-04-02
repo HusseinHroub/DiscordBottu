@@ -71,7 +71,7 @@ async def on_message(message):
             command = CommandsFactory.getCommand(fullCommand[0], fullCommand[1:])
             embedDescrption = command.execute()
         except Exception as e:
-            embedDescrption = 'Error happened: ' + str(e)
+            embedDescrption = str(e)
             traceback.print_exc()
         if embedDescrption != None and embedDescrption != '':
             embed = discord.Embed(description=embedDescrption, color=0x27966b)

@@ -11,12 +11,12 @@ class RankCommand:
     @dbutils.SessionManager
     def execute(self, session):
         if len(self.commandArgs) == 0:
-            return "Error: summoner name wasn't provided," + self.getHelpMessage()
+            raise ValueError("Summoner name wasn't provided," + self.getHelpMessage())
         summonerName = self.commandArgs[0]
         stats = defaultStat if len(self.commandArgs) == 1 else self.commandArgs[1]
         rankExtractor = self.getRankExtractor(stats)
         if not dbutils.isSummonerNameExist(summonerName, session):
-            return f"It seems this summoner name {summonerName} is not registerred, please register this summoner first using this command\n!lregister \"{summonerName}\""
+            raise LookupError(f"It seems this summoner name {summonerName} is not registerred, please register this summoner first using this command\n!lregister \"{summonerName}\"")
         return rankExtractor.extract(summonerName, session)
 
     def getHelpMessage(self):
@@ -35,5 +35,5 @@ class RankCommand:
 
         rankExtractorObject = rankExtractors.get(stats, None)
         if (rankExtractorObject == None):
-            raise Exception(f"Incorrect second argument, invalid stat value: {stats}" + self.getHelpMessage())
+            raise ValueError(f"Incorrect second argument, invalid stat value: {stats}" + self.getHelpMessage())
         return rankExtractorObject
