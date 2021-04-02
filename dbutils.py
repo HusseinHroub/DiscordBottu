@@ -37,6 +37,7 @@ def SessionManager(func):
                 session.close()
         return func(*args, **kwargs)
 
+    return wrap
 
 
 def isSummonerNameExist(summonerName, session):
