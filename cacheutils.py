@@ -1,7 +1,3 @@
-# import time
-
-# lock = threading.Lock()
-
 topKills = []
 topDeaths = []
 topAssists = []

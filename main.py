@@ -11,6 +11,7 @@ import Commands.CommandsFactory as CommandsFactory
 import sotrageutils
 from Jobs.JobScheduler import JobScheduler
 from Jobs.Tasks.LolStatUpdatorTask import LolStatUpdatorTask
+from dbutils import SessionManager
 from keep_alive import keep_alive
 from lolutils import constants
 from requestUtls import utils
@@ -18,7 +19,8 @@ from requestUtls import utils
 client = discord.Client()
 
 botChannelId = int(os.getenv('BOT_CHANNEL_ID'))
-
+GREEN = 0x27966b
+RED = 0xff3d3d
 
 def stripStringArray(stringArray):
     for i in range(len(stringArray)):
@@ -27,9 +29,7 @@ def stripStringArray(stringArray):
 
 @client.event
 async def on_ready():
-    sotrageutils.updateStatCache()
-    sotrageutils.updateAnnouncedMonthValue()
-    print('Updated cache')
+    updateCaches()
     # JobScheduler(LolAnnouncer(client.get_channel(botChannelId),
     #                           asyncio.get_running_loop()), 3600).start()
     JobScheduler(LolStatUpdatorTask(client.get_channel(botChannelId),
@@ -38,6 +38,12 @@ async def on_ready():
     initChampionData()
     print('initialized champion data')
 
+
+@SessionManager
+def updateCaches(session):
+    sotrageutils.updateStatCache(session)
+    sotrageutils.updateAnnouncedMonthValue(session)
+    print('Updated cache')
 
 def initChampionData():
     champ_data = utils.getHTTPJsonResponse('http://ddragon.leagueoflegends.com/cdn/11.2.1/data/en_US/champion.json')
@@ -60,16 +66,18 @@ async def on_message(message):
 
     messageContent = message.content
     if messageContent.startswith('!l') or messageContent.startswith('!L'):
+        embedColor = GREEN
         try:
             fullCommand = shlex.split(messageContent)
             stripStringArray(fullCommand)
             command = CommandsFactory.getCommand(fullCommand[0], fullCommand[1:])
             embedDescrption = command.execute()
         except Exception as e:
-            embedDescrption = 'Error happened: ' + str(e)
+            embedDescrption = str(e)
+            embedColor = RED
             traceback.print_exc()
         if embedDescrption != None and embedDescrption != '':
-            embed = discord.Embed(description=embedDescrption, color=0x27966b)
+            embed = discord.Embed(description=embedDescrption, color=embedColor)
             await message.channel.send(embed=embed)
 
 

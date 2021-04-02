@@ -16,7 +16,7 @@ def getTotalStatsOfMatches(matches, accountId):
 def getStatResultsFromWorkerThreads(matches, accountId):
     queue = Queue(maxsize=0)
     numberOfThreads = min(30, len(matches))
-    results = [None for x in matches];
+    results = [None for x in matches]
     for i in range(len(matches)):
         queue.put((i, matches[i]['gameId']))
     threads = []

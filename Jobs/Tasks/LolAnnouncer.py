@@ -5,6 +5,7 @@ import discord
 import sotrageutils
 
 #Not working as expected! check line 16, it returns the value not the tuple..
+##Also, line 17 gets an object and not typle..... (cuz of the usage of sqlalchemy)
 class LolAnnouncer:
 
     def __init__(self, channel, loop):

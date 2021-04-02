@@ -13,7 +13,7 @@ def getHTTPJsonResponse(url, retryingAttemps=RETRYING_ATTEMPS):
 
     print(f'got {status_code} status Code, retrying attemps = {retryingAttemps}')
     if retryingAttemps < 1:
-        raise Exception(f'Tried to retry the request to avoid {status_code} but failed')
+        raise TimeoutError(f'Tried to retry the request to avoid {status_code} but failed')
     print(f'sleeping for {RETRYING_ATTEMPS - retryingAttemps + 1} seconds then will retry')
     time.sleep(RETRYING_ATTEMPS - retryingAttemps + 1)
     return getHTTPJsonResponse(url, retryingAttemps - 1)
