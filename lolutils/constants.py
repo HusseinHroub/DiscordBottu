@@ -7,7 +7,8 @@ QUEUE_ID_GAME_TYPE_MAPPING = {
     440: 'Ranked Flex',
     450: 'Aram',
     700: 'Clash',
-    900: 'URF'
+    900: 'URF',
+    1020: 'One For All'
 }
 
 CHAMPION_ROOT_IMAGE_PATH_URL = 'http://ddragon.leagueoflegends.com/cdn/11.2.1/img/champion/'
