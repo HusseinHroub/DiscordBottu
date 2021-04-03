@@ -12,9 +12,6 @@ class SortedListCommand:
         stats = defaultStat if len(self.commandArgs) == 0 else self.commandArgs[0]
         return self.getTopListExtractor(stats).extract()
 
-    def getType(self):
-        return 'top' if self.modeType == '!ltop' else 'worst'
-
     def getTopListExtractor(self, stats):
         modeType = ModeTypes.top if self.modeType == '!ltop' else ModeTypes.worst
         if stats == 'kills' or stats == 'kill':
