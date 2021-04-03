@@ -66,6 +66,12 @@ async def on_message(message):
 
     messageContent = message.content
     if messageContent.startswith('!l') or messageContent.startswith('!L'):
+        if message.channel.id != botChannelId and messageContent.lower() != '!leave':
+            apology = f'Sorry I only work in <#{botChannelId}> channel :('
+            embed = discord.Embed(description=apology, color=RED)
+            await message.channel.send(embed=embed)
+            return
+
         embedColor = GREEN
         try:
             fullCommand = shlex.split(messageContent)
