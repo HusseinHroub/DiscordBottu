@@ -10,6 +10,7 @@ class ModeTypes(enum.Enum):
     top = 0
     worst = 1
 
+RANKS_DATA_FORMAT = os.getenv('RANKS_DATA_FORMAT')
 
 class SimpleSortedListExtractor:
     def __init__(self, modeType, statType):
@@ -49,7 +50,7 @@ class SimpleSortedListExtractor:
         return [counter, summoner_name, value]
 
     def get_ranks_data_fromatter(self):
-        if os.getenv('RANKS_DATA_FORMAT') == 'table':
+        if RANKS_DATA_FORMAT == 'table':
             return TableRankViewFormatter()
         else:
             return SimpleRankViewFormatter()
