@@ -1,4 +1,5 @@
 import enum
+import os
 
 import sotrageutils
 from SortedListExtractors.formatters.SimpleRankViewFormatter import SimpleRankViewFormatter
@@ -18,7 +19,7 @@ class SimpleSortedListExtractor:
     def extract(self):
         summoners_data = sotrageutils.getSummonersSortedByStat(self.statType)
         ranks_data = self.get_ranks_data(summoners_data)
-        return TableRankViewFormatter().format(ranks_data)
+        return self.get_ranks_data_fromatter().format(ranks_data)
 
     def get_ranks_data(self, summoners_data):
         counter = 1
@@ -46,3 +47,9 @@ class SimpleSortedListExtractor:
         if self.statType == 'avg_kda':
             value = round(summoner_data[1], 2)
         return [counter, summoner_name, value]
+
+    def get_ranks_data_fromatter(self):
+        if os.getenv('RANKS_DATA_FORMAT') == 'table':
+            return TableRankViewFormatter()
+        else:
+            return SimpleRankViewFormatter()
