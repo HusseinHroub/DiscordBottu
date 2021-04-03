@@ -21,6 +21,8 @@ class RegisterCommand:
         accountId = lolApiUtils.getAccountIdByName(summonerName)
         if (dbutils.isAccountIdExist(accountId, session)):
             dbutils.updateSummonerNameByAccountId(accountId, summonerName, session)
+            session.commit()
+            self.updateCacheInAnotherThread()
             raise AttributeError(
                 f'Summoner is already registered with old name, updated to the new provided name: {summonerName}')
         dbutils.insertSummoner(accountId, summonerName, self.getCurrentEpochTime(), session)
