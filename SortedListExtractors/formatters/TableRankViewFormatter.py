@@ -1,9 +1,9 @@
-from terminaltables import SingleTable
-
+from tabulate import tabulate
 
 class TableRankViewFormatter:
     def format(self, ranks_data):
-        table = SingleTable(ranks_data)
-        table.inner_heading_row_border = False
-        table.inner_row_border = True
-        return '```' + table.table + '```'
+        return '```' + tabulate(ranks_data[1:],
+                                headers=ranks_data[0],
+                                tablefmt="fancy_grid",
+                                numalign="left",
+                                stralign="left") + '```'
