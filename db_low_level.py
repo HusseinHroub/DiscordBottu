@@ -27,8 +27,7 @@ class SummonerData(Base):
     wins = Column(Integer, default=0)
     loses = Column(Integer, default=0)
     win_rate = Column(VARCHAR(10),
-                      Computed('CONCAT(ROUND(((wins / IF((wins + loses) = 0, 1, (wins + loses))) * 100), 2), "%")'),
-                      default=0)
+                      Computed('CONCAT(ROUND(((wins / IF((wins + loses) = 0, 1, (wins + loses))) * 100), 2), "%")'))
 
 
 class CommonTable(Base):

@@ -32,7 +32,7 @@ class SortedListCommand:
             return SimpleSortedListExtractor(self.modeType, 'win_rate')
         else:
             raise ValueError(
-                f"{self.modeType} {stats} is not a valid command, type !lhelp to get full list of available commands")
+                f"{stats} is not valid stat, type !lhelp to get full list of available commands")
 
 
 def getUsage(modeType) -> [CommandUsage]:
