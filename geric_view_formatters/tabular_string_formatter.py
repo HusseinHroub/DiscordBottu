@@ -1,9 +1,9 @@
 from tabulate import tabulate
 
-class TableRankViewFormatter:
-    def format(self, ranks_data):
+class TabularStringFormatter:
+    def format(self, ranks_data, tablefmt='fancy_grid'):
         return '```' + tabulate(ranks_data[1:],
                                 headers=ranks_data[0],
-                                tablefmt="fancy_grid",
+                                tablefmt=tablefmt,
                                 numalign="left",
                                 stralign="left") + '```'
