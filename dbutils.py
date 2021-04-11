@@ -80,7 +80,7 @@ def updateCommonTableRow(key, value, session):
 
 def resetStats(session):
     session.query(SummonerData).update(
-        {'kills': 0, 'deaths': 0, 'assists': 0, 'farms': 0, 'avg_kda': 0, 'total_games': 0})
+        {'kills': 0, 'deaths': 0, 'assists': 0, 'farms': 0, 'avg_kda': 0, 'total_games': 0, 'wins': 0, 'loses': 0})
 
 
 def convertListOfDataToModels(listOfData):

@@ -3,19 +3,19 @@ from threading import Thread
 
 import dbutils
 import sotrageutils
+from Commands.utils.command_result import CommandResult
+from Commands.utils.command_usage import CommandUsage
 from lolutils import lolApiUtils
 
 
 class RegisterCommand:
-    def __init__(self, commandArgs):
-        self.commandArgs = commandArgs
 
     @dbutils.SessionManager
-    def execute(self, session):
-        if len(self.commandArgs) == 0:
+    def execute(self, commandArgs, session):
+        if len(commandArgs) == 0:
             raise ValueError(
                 f"Summoner name wasn't provided, here is an example on how to use this command\n!lregister \"3amo Draven\"")
-        summonerName = self.commandArgs[0]
+        summonerName = commandArgs[0]
         if dbutils.isSummonerNameExist(summonerName.lower(), session):
             raise AttributeError(f"Already have registered summoner with name {summonerName}")
         accountId = lolApiUtils.getAccountIdByName(summonerName)
@@ -27,7 +27,7 @@ class RegisterCommand:
                 f'Summoner is already registered with old name, updated to the new provided name: {summonerName}')
         dbutils.insertSummoner(accountId, summonerName, self.getCurrentEpochTime(), session)
         self.updateCacheInAnotherThread()
-        return f'Successfully registered {summonerName} in bot database'
+        return CommandResult([f'Successfully registered {summonerName} in bot database'])
 
     def updateCacheInAnotherThread(self):
         thread = Thread(target=sotrageutils.updateStatCache)
@@ -35,3 +35,7 @@ class RegisterCommand:
 
     def getCurrentEpochTime(self):
         return int(time.time() * 1000)
+
+
+def getUsage() -> [CommandUsage]:
+    return [CommandUsage('!lregister "Summoner Name"', 'Register summoner into bot DB (only EUW)')]
