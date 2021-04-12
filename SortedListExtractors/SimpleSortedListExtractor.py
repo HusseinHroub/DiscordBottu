@@ -3,7 +3,7 @@ import os
 
 import sotrageutils
 from SortedListExtractors.formatters.SimpleRankViewFormatter import SimpleRankViewFormatter
-from SortedListExtractors.formatters.TableRankViewFormatter import TableRankViewFormatter
+from geric_view_formatters.tabular_string_formatter import TabularStringFormatter
 
 
 class ModeTypes(enum.Enum):
@@ -51,6 +51,6 @@ class SimpleSortedListExtractor:
 
     def get_ranks_data_fromatter(self):
         if RANKS_DATA_FORMAT == 'table':
-            return TableRankViewFormatter()
+            return TabularStringFormatter()
         else:
             return SimpleRankViewFormatter()

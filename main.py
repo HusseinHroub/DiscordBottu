@@ -22,6 +22,7 @@ botChannelId = int(os.getenv('BOT_CHANNEL_ID'))
 GREEN = 0x27966b
 RED = 0xff3d3d
 
+
 def stripStringArray(stringArray):
     for i in range(len(stringArray)):
         stringArray[i] = stringArray[i].strip()
@@ -44,6 +45,7 @@ def updateCaches(session):
     sotrageutils.updateStatCache(session)
     sotrageutils.updateAnnouncedMonthValue(session)
     print('Updated cache')
+
 
 def initChampionData():
     champ_data = utils.getHTTPJsonResponse('http://ddragon.leagueoflegends.com/cdn/11.2.1/data/en_US/champion.json')
@@ -73,18 +75,30 @@ async def on_message(message):
             return
 
         embedColor = GREEN
+        embed_result = True
         try:
             fullCommand = shlex.split(messageContent)
             stripStringArray(fullCommand)
-            command = CommandsFactory.getCommand(fullCommand[0], fullCommand[1:])
-            embedDescrption = command.execute()
+            command = CommandsFactory.getCommand(fullCommand[0])
+            result = command.execute(fullCommand[1:])
+            result_array = result.result_array
+            embed_result = result.embed_result
         except Exception as e:
-            embedDescrption = str(e)
+            result_array = [str(e)]
             embedColor = RED
             traceback.print_exc()
-        if embedDescrption != None and embedDescrption != '':
-            embed = discord.Embed(description=embedDescrption, color=embedColor)
-            await message.channel.send(embed=embed)
+        if len(result_array) > 0:
+            await send_result_to_channel(embedColor, embed_result, message.channel, result_array)
+
+
+async def send_result_to_channel(embedColor, embed_result, channel, result_array):
+    for result in result_array:
+        if result != '':
+            if embed_result:
+                embed = discord.Embed(description=result, color=embedColor)
+                await channel.send(embed=embed)
+            else:
+                await channel.send(result)
 
 
 keep_alive()
