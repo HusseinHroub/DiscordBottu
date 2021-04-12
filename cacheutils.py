@@ -4,7 +4,6 @@ topAssists = []
 topAvgKda = []
 topFarms = []
 topTotalGames = []
-topWinsRate = []
 monthAnnounceValue = False
 
 
@@ -19,8 +18,7 @@ def doGetSummonerSortedByStat(stats):
         'assists': topAssists,
         'avg_kda': topAvgKda,
         'farms': topFarms,
-        'total_games': topTotalGames,
-        'win_rate': topWinsRate
+        'total_games': topTotalGames
     }
 
     response = switch.get(stats)
@@ -29,20 +27,13 @@ def doGetSummonerSortedByStat(stats):
     return response
 
 
-def updateSortedLists(newTopKills,
-                      newTopDeaths,
-                      newTopAssists,
-                      newTopAvgKda,
-                      newTopFarms,
-                      newTopTotalGames,
-                      newTopWinsRate):
+def updateSortedLists(newTopKills, newTopDeaths, newTopAssists, newTopAvgKda, newTopFarms, newTopTotalGames):
     global topKills
     global topDeaths
     global topAssists
     global topAvgKda
     global topFarms
     global topTotalGames
-    global topWinsRate
 
     topKills = newTopKills
     topDeaths = newTopDeaths
@@ -50,8 +41,6 @@ def updateSortedLists(newTopKills,
     topAvgKda = newTopAvgKda
     topFarms = newTopFarms
     topTotalGames = newTopTotalGames
-    topWinsRate = newTopWinsRate
-
 
 def markMonthAnnouncedValue(new_value):
     global monthAnnounceValue

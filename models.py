@@ -3,7 +3,7 @@ from db_low_level import SummonerData, CommonTable
 
 class SummonerDataModel:
     def __init__(self, accountId=None, name=None, kills=None, deaths=None, assists=None, lastGameTimeStamp=None,
-                 avg_kda=None, farms=None, total_games=None, wins=None, loses=None, win_rate=None):
+                 avg_kda=None, farms=None, total_games=None):
         self.accountId = accountId
         self.name = name
         self.kills = kills
@@ -13,9 +13,6 @@ class SummonerDataModel:
         self.avg_kda = avg_kda
         self.farms = farms
         self.total_games = total_games
-        self.wins = wins
-        self.loses = loses
-        self.win_rate = win_rate
 
     def buildWithDataObject(self, dataObject: SummonerData):
         self.accountId = dataObject.__dict__['accountId']
@@ -27,9 +24,6 @@ class SummonerDataModel:
         self.avg_kda = dataObject.avg_kda
         self.farms = dataObject.farms
         self.total_games = dataObject.total_games
-        self.wins = dataObject.wins
-        self.loses = dataObject.loses
-        self.win_rate = dataObject.win_rate
 
 
 class CommonTableModel:

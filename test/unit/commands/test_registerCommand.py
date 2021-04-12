@@ -5,7 +5,7 @@ from unittest.mock import Mock, patch
 sys.modules['db_low_level'] = Mock()
 patch('dbutils.SessionManager', lambda x: x).start()
 
-from Commands.base_commands.RegisterCommand import RegisterCommand
+from Commands.RegisterCommand import RegisterCommand
 
 
 class MyTestCase(unittest.TestCase):
@@ -13,14 +13,14 @@ class MyTestCase(unittest.TestCase):
         self.session = Mock()
 
     def test_args_empty(self):
-        registerCommand = RegisterCommand()
-        self.assertRaises(ValueError, registerCommand.execute, [], self.session)
+        registerCommand = RegisterCommand([])
+        self.assertRaises(ValueError, registerCommand.execute, self.session)
 
     @patch('dbutils.isSummonerNameExist')
     def test_summoner_not_exist(self, dbutils_isSummonerNameExist):
-        registerCommand = RegisterCommand()
+        registerCommand = RegisterCommand(['hussein'])
         dbutils_isSummonerNameExist.return_value = True
-        self.assertRaises(AttributeError, registerCommand.execute, ['hussein'], self.session)
+        self.assertRaises(AttributeError, registerCommand.execute, self.session)
 
     @patch('dbutils.isSummonerNameExist')
     @patch('dbutils.updateSummonerNameByAccountId')
@@ -30,11 +30,11 @@ class MyTestCase(unittest.TestCase):
                                             dbutils_updateSummonerNameByAccountId,
                                             dbutils_isSummonerNameExist
                                             ):
-        registerCommand = RegisterCommand()
+        registerCommand = RegisterCommand(['hussein'])
         dbutils_isSummonerNameExist.return_value = True
         lolApiUtils_getAccountIdByName.return_value = 'testaccount'
         dbutils_isAccountIdExist.return_value = True
-        self.assertRaises(AttributeError, registerCommand.execute, ['hussein'], self.session)
+        self.assertRaises(AttributeError, registerCommand.execute, self.session)
 
 
 if __name__ == '__main__':

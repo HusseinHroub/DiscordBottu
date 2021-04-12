@@ -73,8 +73,7 @@ class LolStatUpdatorTask:
                 try:
                     results[work[0]] = self.getSummonerMatchesData(matches, summonerDataModel.accountId)
                 except:
-                    print(
-                        f'error happened while getting total stats of player with accountId: {summonerDataModel.accountId}')
+                    print(f'error happened while getting total stats of player with accountId: {summonerDataModel.accountId}')
                     traceback.print_exc()
 
     def getSummonerMatchesData(self, matches, accountId):
@@ -92,8 +91,7 @@ class LolStatUpdatorTask:
         for i in range(len(summonersData)):
             if results[i] == None:
                 continue
-            newSummonersData.append(
-                self.mergeAPIResultAndSummonerDataModel(results[i]['totalStatsResult'], summonersData[i]))
+            newSummonersData.append(self.mergeAPIResultAndSummonerDataModel(results[i]['totalStatsResult'], summonersData[i]))
         return newSummonersData
 
     def mergeAPIResultAndSummonerDataModel(self, result, summonerDataModel):
@@ -105,9 +103,7 @@ class LolStatUpdatorTask:
             'accountId': summonerDataModel.accountId,
             'lastGameTimeStamp': result['lastGameTimeStamp'],
             **self.getKDAInfo(result['avg_kda'], summonerDataModel.avg_kda, result['sample_count'],
-                              summonerDataModel.total_games),
-            'wins': result['wins'] + summonerDataModel.wins,
-            'loses': result['loses'] + summonerDataModel.loses,
+                              summonerDataModel.total_games)
         }
 
     def getKDAInfo(self, newKDA, oldKda, newCount, oldCount):

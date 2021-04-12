@@ -10,14 +10,7 @@ def updateStatCache(session):
     topAvgKda = dbutils.getSummonersSortedByStat('avg_kda', True, session)
     topFarms = dbutils.getSummonersSortedByStat('farms', True, session)
     topTotalGames = dbutils.getSummonersSortedByStat('total_games', True, session)
-    topWinsRate = dbutils.getSummonersSortedByStat('win_rate', True, session)
-    cacheutils.updateSortedLists(topKills,
-                                 topDeaths,
-                                 topAssists,
-                                 topAvgKda,
-                                 topFarms,
-                                 topTotalGames,
-                                 topWinsRate)
+    cacheutils.updateSortedLists(topKills, topDeaths, topAssists, topAvgKda, topFarms, topTotalGames)
 
 
 def getSummonersSortedByStat(statType):

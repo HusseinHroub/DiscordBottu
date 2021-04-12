@@ -1,6 +1,6 @@
 import os
 
-from sqlalchemy import Column, Integer, Float, VARCHAR, BIGINT, create_engine, Computed
+from sqlalchemy import Column, Integer, Float, VARCHAR, BIGINT, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.pool import NullPool
 
@@ -24,10 +24,6 @@ class SummonerData(Base):
     avg_kda = Column(Float, default=0.0)
     farms = Column(Integer, default=0)
     total_games = Column(Integer, default=0)
-    wins = Column(Integer, default=0)
-    loses = Column(Integer, default=0)
-    win_rate = Column(VARCHAR(10),
-                      Computed('CONCAT(ROUND(((wins / IF((wins + loses) = 0, 1, (wins + loses))) * 100), 2), "%")'))
 
 
 class CommonTable(Base):

@@ -76,9 +76,7 @@ class MyTestCase(unittest.TestCase):
                                                                   lastGameTimeStamp=1616762540733,
                                                                   avg_kda=2.3,
                                                                   farms=30,
-                                                                  total_games=15,
-                                                                  wins=3,
-                                                                  loses=5)]
+                                                                  total_games=15)]
         lol_get_matches_api_mock.side_effect = self.lol_get_matches
         lol_get_match_by_id_mock.side_effect = self.get_match_by_id_mock
         session = Mock()
@@ -92,9 +90,7 @@ class MyTestCase(unittest.TestCase):
                 'accountId': 'testAccount',
                 'lastGameTimeStamp': 1616765013666,
                 'avg_kda': 2.3008403361344536,
-                'total_games': 17,
-                'wins': 4,
-                'loses': 6
+                'total_games': 17
             }
         ]
         session.bulk_update_mappings.assert_called_once_with(dbutils.SummonerData, output)
@@ -115,9 +111,7 @@ class MyTestCase(unittest.TestCase):
                                                                   lastGameTimeStamp=1616762540733,
                                                                   avg_kda=2.3,
                                                                   farms=30,
-                                                                  total_games=15,
-                                                                  wins=3,
-                                                                  loses=5),
+                                                                  total_games=15),
                                                 SummonerDataModel(accountId='testAccount1',
                                                                   name='omar',
                                                                   kills=1,
@@ -126,9 +120,7 @@ class MyTestCase(unittest.TestCase):
                                                                   lastGameTimeStamp=1616762540731,
                                                                   avg_kda=1.2,
                                                                   farms=12,
-                                                                  total_games=14,
-                                                                  wins=1,
-                                                                  loses=0)]
+                                                                  total_games=14)]
         lol_get_matches_api_mock.side_effect = self.lol_get_matches
         lol_get_match_by_id_mock.side_effect = self.get_match_by_id_mock
         session = Mock()
@@ -142,9 +134,7 @@ class MyTestCase(unittest.TestCase):
                 'accountId': 'testAccount',
                 'lastGameTimeStamp': 1616765013666,
                 'avg_kda': 2.3008403361344536,
-                'total_games': 17,
-                'wins': 4,
-                'loses': 6
+                'total_games': 17
             }
         ]
         session.bulk_update_mappings.assert_called_once_with(dbutils.SummonerData, output)
@@ -165,9 +155,7 @@ class MyTestCase(unittest.TestCase):
                                                                   lastGameTimeStamp=1616762540731,
                                                                   avg_kda=2.3,
                                                                   farms=30,
-                                                                  total_games=15,
-                                                                  wins=3,
-                                                                  loses=5),
+                                                                  total_games=15),
                                                 SummonerDataModel(accountId='testAccount1',
                                                                   name='omar',
                                                                   kills=1,
@@ -176,9 +164,7 @@ class MyTestCase(unittest.TestCase):
                                                                   lastGameTimeStamp=1616762540731,
                                                                   avg_kda=1.2,
                                                                   farms=12,
-                                                                  total_games=14,
-                                                                  wins=1,
-                                                                  loses=0)]
+                                                                  total_games=14)]
         lol_get_matches_api_mock.side_effect = self.lol_get_matches
         lol_get_match_by_id_mock.side_effect = self.get_match_by_id_mock
         session = Mock()
@@ -216,9 +202,7 @@ class MyTestCase(unittest.TestCase):
                                                                   lastGameTimeStamp=1616762540733,
                                                                   avg_kda=0,
                                                                   farms=0,
-                                                                  total_games=0,
-                                                                  wins=0,
-                                                                  loses=0),
+                                                                  total_games=0),
                                                 SummonerDataModel(accountId='testAccount1',
                                                                   name='omar',
                                                                   kills=0,
@@ -227,9 +211,7 @@ class MyTestCase(unittest.TestCase):
                                                                   lastGameTimeStamp=1616762540733,
                                                                   avg_kda=0,
                                                                   farms=0,
-                                                                  total_games=0,
-                                                                  wins=0,
-                                                                  loses=0)]
+                                                                  total_games=0)]
         lol_get_matches_api_mock.side_effect = self.lol_get_matches
         lol_get_match_by_id_mock.side_effect = self.get_match_by_id_mock
         session = Mock()
@@ -243,9 +225,7 @@ class MyTestCase(unittest.TestCase):
                 'accountId': 'testAccount',
                 'lastGameTimeStamp': 1616765013666,
                 'avg_kda': 2.314285714285714,
-                'total_games': 2,
-                'wins': 1,
-                'loses': 1
+                'total_games': 2
             },
             {
                 'kills': 1,
@@ -255,9 +235,7 @@ class MyTestCase(unittest.TestCase):
                 'accountId': 'testAccount1',
                 'lastGameTimeStamp': 1616762540735,
                 'avg_kda': 1.6666666666666667,
-                'total_games': 1,
-                'wins': 0,
-                'loses': 1
+                'total_games': 1
             }
         ]
         session.bulk_update_mappings.assert_called_once_with(dbutils.SummonerData, output)
