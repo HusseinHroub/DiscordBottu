@@ -12,12 +12,10 @@ from Commands.top_commands.SortedListCommand import SortedListCommand
 from Commands.top_commands.WinsRateCommand import WinsRateCommand
 from SortedListExtractors.SimpleSortedListExtractor import ModeTypes
 
-commands = {}
-
 
 def getCommand(command):
     command = command.lower()
-    commandObject = commands.get(command, None)
+    commandObject = getCommand(command)
     if commandObject != None:
         return commandObject
     else:
@@ -28,41 +26,30 @@ def getHelpMessage():
     return 'type !lhelp to see list of available commands'
 
 
-def initCommands():
-    global commands
-    kill_command = KillsCommand()
-    deaths_command = DeathsCommand()
-    assists_command = AssistsCommand()
-    farms_command = FarmsCommand()
-    kda_command = KDACommand()
-    games_command = GamesCommand()
-    wins_rate_command = WinsRateCommand()
-    commands = {
-        '!lregister': RegisterCommand(),
-        '!lrank': RankCommand(),
-        '!ltop': SortedListCommand(ModeTypes.top),
-        '!lworst': SortedListCommand(ModeTypes.worst),
-        '!lkills': kill_command,
-        '!lkill': kill_command,
-        '!ldeath': deaths_command,
-        '!ldeaths': deaths_command,
-        '!lassists': assists_command,
-        '!lassist': assists_command,
-        '!lkda': kda_command,
-        '!lavg_kda': kda_command,
-        '!lavgkda': kda_command,
-        '!lfarms': farms_command,
-        '!lfarm': farms_command,
-        '!lgames': games_command,
-        '!ltotal_games': games_command,
-        '!lgames_count': games_command,
-        '!lgamescount': games_command,
-        '!lwinrate': wins_rate_command,
-        '!lwinsrate': wins_rate_command,
-        '!leave': LeaveCommand(),
-        '!lhelp': HelpCommand()
-
-    }
-
-
-initCommands()
+def getCommand(command):
+    if command == '!lregister':
+        return RegisterCommand()
+    if command == '!lrank':
+        return RankCommand()
+    if command == '!ltop':
+        return SortedListCommand(ModeTypes.top)
+    if command == '!lworst':
+        return SortedListCommand(ModeTypes.worst)
+    if command == '!lkills' or command == '!lkill':
+        return KillsCommand()
+    if command == '!ldeath' or command == '!ldeaths':
+        return DeathsCommand()
+    if command == '!lassist' or command == '!lassists':
+        return AssistsCommand()
+    if command == '!lkda' or command == '!lavg_kda' or command == '!lavgkda':
+        return KDACommand()
+    if command == '!lfarm' or command == '!lfarms':
+        return FarmsCommand()
+    if command == '!lgames' or command == '!ltotal_games' or command == '!lgames_count' or command == '!lgamescount':
+        return GamesCommand()
+    if command == '!lwinrate' or command == '!lwinsrate':
+        return WinsRateCommand()
+    if command == '!leave':
+        return LeaveCommand()
+    if command == '!lhelp':
+        return HelpCommand()
