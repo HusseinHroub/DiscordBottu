@@ -15,18 +15,18 @@ from SortedListExtractors.SimpleSortedListExtractor import ModeTypes
 
 def getCommand(command):
     command = command.lower()
-    commandObject = getCommand(command)
+    commandObject = getCommandOrNone(command)
     if commandObject != None:
         return commandObject
     else:
-        raise Exception(f"Command {command} doesn't exist, {getHelpMessage()}")
+        raise ValueError(f"Command {command} doesn't exist, {getHelpMessage()}")
 
 
 def getHelpMessage():
     return 'type !lhelp to see list of available commands'
 
 
-def getCommand(command):
+def getCommandOrNone(command):
     if command == '!lregister':
         return RegisterCommand()
     if command == '!lrank':
