@@ -5,8 +5,6 @@ from sqlalchemy.orm import sessionmaker, Session
 
 from db_low_level import engine, SummonerData, CommonTable
 from models import SummonerDataModel
-from statsUtils import stat_helper_utils
-
 MySession = sessionmaker(bind=engine)
 
 
@@ -40,6 +38,7 @@ def SessionManager(func):
 
     return wrap
 
+from statsUtils import stat_helper_utils
 
 def isSummonerNameExist(summonerName, session):
     return session.query(func.count(SummonerData.name)).filter(SummonerData.name == summonerName).scalar() == 1
