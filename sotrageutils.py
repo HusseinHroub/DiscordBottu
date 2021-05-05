@@ -1,23 +1,12 @@
 import cacheutils
 import dbutils
+from statsUtils import stat_helper_utils
 
 
 @dbutils.SessionManager
 def updateStatCache(session):
-    topKills = dbutils.getSummonersSortedByStat('kills', True, session)
-    topDeaths = dbutils.getSummonersSortedByStat('deaths', False, session)
-    topAssists = dbutils.getSummonersSortedByStat('assists', True, session)
-    topAvgKda = dbutils.getSummonersSortedByStat('avg_kda', True, session)
-    topFarms = dbutils.getSummonersSortedByStat('farms', True, session)
-    topTotalGames = dbutils.getSummonersSortedByStat('total_games', True, session)
-    topWinsRate = dbutils.getSummonersSortedByStat('win_rate', True, session)
-    cacheutils.updateSortedLists(topKills,
-                                 topDeaths,
-                                 topAssists,
-                                 topAvgKda,
-                                 topFarms,
-                                 topTotalGames,
-                                 topWinsRate)
+    for statHelper in stat_helper_utils.stat_helpers:
+        statHelper.updateCache(session)
 
 
 def getSummonersSortedByStat(statType):

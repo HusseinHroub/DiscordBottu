@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker, Session
 
 from db_low_level import engine, SummonerData, CommonTable
 from models import SummonerDataModel
+from statsUtils import stat_helper_utils
 
 MySession = sessionmaker(bind=engine)
 
@@ -79,8 +80,10 @@ def updateCommonTableRow(key, value, session):
 
 
 def resetStats(session):
-    session.query(SummonerData).update(
-        {'kills': 0, 'deaths': 0, 'assists': 0, 'farms': 0, 'avg_kda': 0, 'total_games': 0, 'wins': 0, 'loses': 0})
+    stats_resetted = {}
+    for statHelper in stat_helper_utils.stat_helpers:
+        stats_resetted.update(statHelper.getResettedNameValue())
+    session.query(SummonerData).update(stats_resetted)
 
 
 def convertListOfDataToModels(listOfData):

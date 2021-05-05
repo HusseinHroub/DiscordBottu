@@ -29,30 +29,6 @@ def doGetSummonerSortedByStat(stats):
     return response
 
 
-def updateSortedLists(newTopKills,
-                      newTopDeaths,
-                      newTopAssists,
-                      newTopAvgKda,
-                      newTopFarms,
-                      newTopTotalGames,
-                      newTopWinsRate):
-    global topKills
-    global topDeaths
-    global topAssists
-    global topAvgKda
-    global topFarms
-    global topTotalGames
-    global topWinsRate
-
-    topKills = newTopKills
-    topDeaths = newTopDeaths
-    topAssists = newTopAssists
-    topAvgKda = newTopAvgKda
-    topFarms = newTopFarms
-    topTotalGames = newTopTotalGames
-    topWinsRate = newTopWinsRate
-
-
 def markMonthAnnouncedValue(new_value):
     global monthAnnounceValue
     monthAnnounceValue = new_value

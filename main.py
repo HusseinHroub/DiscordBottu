@@ -21,7 +21,7 @@ client = discord.Client()
 botChannelId = int(os.getenv('BOT_CHANNEL_ID'))
 GREEN = 0x27966b
 RED = 0xff3d3d
-
+STAT_UPDATER_PERIOD = 60
 
 def stripStringArray(stringArray):
     for i in range(len(stringArray)):
@@ -31,10 +31,8 @@ def stripStringArray(stringArray):
 @client.event
 async def on_ready():
     updateCaches()
-    # JobScheduler(LolAnnouncer(client.get_channel(botChannelId),
-    #                           asyncio.get_running_loop()), 3600).start()
     JobScheduler(LolStatUpdatorTask(client.get_channel(botChannelId),
-                                    asyncio.get_running_loop()), 300).start()
+                                    asyncio.get_running_loop()), STAT_UPDATER_PERIOD).start()
     print('started two jobs bro!')
     initChampionData()
     print('initialized champion data')

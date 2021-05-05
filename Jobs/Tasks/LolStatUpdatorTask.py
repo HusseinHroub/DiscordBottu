@@ -11,7 +11,7 @@ import dbutils
 import sotrageutils
 from lolutils import constants
 from lolutils import lolApiUtils
-from statsUtils import lolStatsMerger
+from statsUtils import lolStatsMerger, stat_helper_utils
 
 
 class LolStatUpdatorTask:
@@ -97,25 +97,10 @@ class LolStatUpdatorTask:
         return newSummonersData
 
     def mergeAPIResultAndSummonerDataModel(self, result, summonerDataModel):
-        return {
-            'kills': result['total_kills'] + summonerDataModel.kills,
-            'deaths': result['total_deaths'] + summonerDataModel.deaths,
-            'assists': result['total_assists'] + summonerDataModel.assists,
-            'farms': result['total_farms'] + summonerDataModel.farms,
-            'accountId': summonerDataModel.accountId,
-            'lastGameTimeStamp': result['lastGameTimeStamp'],
-            **self.getKDAInfo(result['avg_kda'], summonerDataModel.avg_kda, result['sample_count'],
-                              summonerDataModel.total_games),
-            'wins': result['wins'] + summonerDataModel.wins,
-            'loses': result['loses'] + summonerDataModel.loses,
-        }
-
-    def getKDAInfo(self, newKDA, oldKda, newCount, oldCount):
-        totalCount = newCount + oldCount
-        return {
-            'avg_kda': newKDA if oldCount == 0 else (oldKda + (newKDA - oldKda) / totalCount),
-            'total_games': totalCount
-        }
+        merged_results = {'accountId': summonerDataModel.accountId, 'lastGameTimeStamp': result['lastGameTimeStamp']}
+        for statHelper in stat_helper_utils.stat_helpers:
+            merged_results.update(statHelper.mergeResultWithSummonerData(result, summonerDataModel))
+        return merged_results
 
     def updateToDBIfNotEmptyData(self, newSummonersData, session):
         if newSummonersData != None and len(newSummonersData) > 0:
@@ -140,18 +125,15 @@ class LolStatUpdatorTask:
 
     def getStatsNameAndValueToBeAnnounced(self, matchStat):
         messages = []
-        if matchStat['kills'] > 19:
-            messages.append({'name': 'Kills', 'value': matchStat["kills"]})
-        if matchStat['deaths'] > 14:
-            messages.append({'name': 'Deaths (waaw!)', 'value': matchStat["deaths"]})
+        for statHelper in stat_helper_utils.stat_helpers:
+            if statHelper.isEligibleForAnnouncment(matchStat):
+                messages.append(statHelper.getAnnouncmentNameValue(matchStat))
         if matchStat['pentaKills'] > 0:
             messages.append({'name': 'PentaKills', 'value': matchStat["pentaKills"]})
         if matchStat['quadraKills'] > 0:
             messages.append({'name': 'QuadraKills', 'value': matchStat["quadraKills"]})
         if matchStat['doubleKills'] > 3:
             messages.append({'name': 'DoubleKills', 'value': matchStat["doubleKills"]})
-        if matchStat['assists'] > 19:
-            messages.append({'name': 'Assists', 'value': matchStat["assists"]})
         return messages
 
     def get_match_meta_data(self, matchStat):
@@ -178,27 +160,12 @@ class LolStatUpdatorTask:
         asyncio.run_coroutine_threadsafe(self.channel.send(embed=embed), self.loop)
 
     def shareTopPlayersStatsPerCategory(self):
-        topKillsSummoner = sotrageutils.getTopKillsList()[0]
-        topDeathsSummoner = sotrageutils.getTopDeathsList()[0]
-        topAssistsSummoner = sotrageutils.getTopAssistsList()[0]
-        topFarmsSummoner = sotrageutils.getTopFarmsList()[0]
-        topGamesSummoner = sotrageutils.getTopGamesList()[0]
-        topKDASummoner = sotrageutils.getTopKDAList()[0]
-
         embed = discord.Embed(title='Today News!',
                               description=f'All summoners stats are reseted to zeros, and below are the top summoners of previous month ({self.getPrevMonthName()}):',
                               color=0x27966b)
-        self.addTopEmbedFiled(embed, 'Kills', topKillsSummoner[0], topKillsSummoner[1])
-        self.addTopEmbedFiled(embed, 'Deaths', topDeathsSummoner[0], topDeathsSummoner[1])
-        self.addTopEmbedFiled(embed, 'Assists', topAssistsSummoner[0], topAssistsSummoner[1])
-        self.addTopEmbedFiled(embed, 'Farms', topFarmsSummoner[0], topFarmsSummoner[1])
-        self.addTopEmbedFiled(embed, 'Games Count', topGamesSummoner[0], topGamesSummoner[1])
-        self.addTopEmbedFiled(embed, 'Average KDA', topKDASummoner[0], topKDASummoner[1])
+        for statHelper in stat_helper_utils.stat_helpers:
+            statHelper.addFieldToTopEmbed(embed)
         asyncio.run_coroutine_threadsafe(self.channel.send(embed=embed), self.loop)
-
-    def addTopEmbedFiled(self, embed, category, summonerName, topValue):
-        embed.add_field(name=f'Top {category}', value=f'{summonerName} with {topValue} {category.lower()}',
-                        inline=False)
 
     def getPrevMonthName(self):
         month_number = datetime.today().month
