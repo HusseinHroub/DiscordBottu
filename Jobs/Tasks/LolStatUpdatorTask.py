@@ -42,6 +42,7 @@ class LolStatUpdatorTask:
 
     def startUpdateProcess(self, session):
         summonersDatabaseResults = dbutils.getAllSummonerData(session)
+        session.close()
         summonersLolAPIResults = self.getSummonersAPIStats(summonersDatabaseResults)
         summonersMergedResults = self.mergeSummonersDataBaseAndAPIResults(summonersDatabaseResults,
                                                                           summonersLolAPIResults)
@@ -50,7 +51,7 @@ class LolStatUpdatorTask:
 
     def getSummonersAPIStats(self, summonersData):
         queue = Queue(maxsize=0)
-        numberOfThreads = min(30, len(summonersData))
+        numberOfThreads = 1
         results = [None for x in summonersData]
         for i in range(len(summonersData)):
             queue.put((i, summonersData[i]))

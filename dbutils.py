@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker, Session
 
 from db_low_level import engine, SummonerData, CommonTable
 from models import SummonerDataModel
+
 MySession = sessionmaker(bind=engine)
 
 
@@ -38,7 +39,9 @@ def SessionManager(func):
 
     return wrap
 
+
 from statsUtils import stat_helper_utils
+
 
 def isSummonerNameExist(summonerName, session):
     return session.query(func.count(SummonerData.name)).filter(SummonerData.name == summonerName).scalar() == 1
@@ -81,7 +84,9 @@ def updateCommonTableRow(key, value, session):
 def resetStats(session):
     stats_resetted = {}
     for statHelper in stat_helper_utils.stat_helpers:
-        stats_resetted.update(statHelper.getResettedNameValue())
+        resetted_name_value = statHelper.getResettedNameValue()
+        if resetted_name_value is not None:
+            stats_resetted.update(resetted_name_value)
     session.query(SummonerData).update(stats_resetted)
 
 
