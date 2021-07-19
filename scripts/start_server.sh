@@ -1,3 +1,3 @@
 #!/bin/bash
 source /mnt/RankBotResoources/init_env_variables.sh
-python3 ../main.py
+nohup python3 -u ../main.py > /dev/null 2>&1 &
