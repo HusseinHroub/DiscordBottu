@@ -1,7 +1,10 @@
 #!/bin/bash
-
-if python3 -m unittest discover ..; then
-    exit 0
+cd ..
+pwd
+if python3 -m unittest; then
+  eecho 'error'
+  exit 0
 else
-    exit 1
+  echo 'success'
+  exit 1
 fi
