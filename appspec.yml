@@ -1,5 +1,8 @@
 version: 0.0
 os: linux
+files:
+  - source: /
+    destination: /mnt/RankBotResoources/DiscordBotApplicationi
 hooks:
   BeforeInstall:
     - location: scripts/install_dependencies.sh
