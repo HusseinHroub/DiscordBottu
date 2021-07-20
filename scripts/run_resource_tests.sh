@@ -1,7 +1,6 @@
 #!/bin/bash
-cd ..
 
-if python3 -m unittest; then
+if python3 -m unittest discover ..; then
     exit 0
 else
     exit 1
