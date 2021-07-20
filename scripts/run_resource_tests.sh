@@ -1,8 +1,8 @@
 #!/bin/bash
 cd ..
-pwd
+echo 'location: ' "$(pwd)"
 if python3 -m unittest; then
-  eecho 'error'
+  echo 'error'
   exit 0
 else
   echo 'success'
