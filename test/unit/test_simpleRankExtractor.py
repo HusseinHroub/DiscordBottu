@@ -22,7 +22,7 @@ class MyTestCase(unittest.TestCase):
         summoner_data_array = [SummonerDataModel(name='Hussein'), SummonerDataModel(name='Omar'), SummonerDataModel(name='Saleh')]
         self.assertEqual(1, simpleRankExtractor.getSummonerRankDetails(summoner_data_array, "hussein")[0])
         self.assertEqual(2, simpleRankExtractor.getSummonerRankDetails(summoner_data_array, "omar")[0])
-        self.assertEqual(3, simpleRankExtractor.getSummonerRankDetails(summoner_data_array, "saleh")[0])
+        self.assertEqual(2, simpleRankExtractor.getSummonerRankDetails(summoner_data_array, "saleh")[0])
         self.assertEqual(None, simpleRankExtractor.getSummonerRankDetails(summoner_data_array, "not_found")[0])
 
 
