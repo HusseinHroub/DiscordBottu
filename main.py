@@ -12,7 +12,6 @@ import sotrageutils
 from Jobs.JobScheduler import JobScheduler
 from Jobs.Tasks.LolStatUpdatorTask import LolStatUpdatorTask
 from dbutils import SessionManager
-from keep_alive import keep_alive
 from lolutils import constants
 from requestUtls import utils
 
@@ -99,5 +98,4 @@ async def send_result_to_channel(embedColor, embed_result, channel, result_array
                 await channel.send(result)
 
 
-keep_alive()
 client.run(os.getenv('CTOKEN'))
