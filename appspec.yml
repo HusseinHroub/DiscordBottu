@@ -3,6 +3,8 @@ os: linux
 files:
   - source: /
     destination: /mnt/RankBotResoources/DiscordBotApplicationi
+  - source: /logrotate
+    destination: /etc/logrotate.d
 file_exists_behavior: OVERWRITE
 hooks:
   BeforeInstall:

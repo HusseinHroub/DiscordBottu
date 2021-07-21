@@ -1,0 +1,9 @@
+/mnt/RankBotResoources/DiscordBotApplicationi/logs/log.out {
+  size 1M
+  rotate 10
+}
+
+/mnt/RankBotResoources/DiscordBotApplicationi/logs/log.err {
+  size 1M
+  rotate 10
+}
