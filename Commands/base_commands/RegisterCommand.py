@@ -25,7 +25,7 @@ class RegisterCommand:
             self.updateCacheInAnotherThread()
             raise AttributeError(
                 f'Summoner is already registered with old name, updated to the new provided name: {summonerName}')
-        dbutils.insertSummoner(accountId, summonerName, self.getCurrentEpochTime(), session)
+        dbutils.insertSummoner(accountId, summonerName, self.getCurrentEpochTime() / 1000, session)
         self.updateCacheInAnotherThread()
         return CommandResult([f'Successfully registered {summonerName} in bot database'])
 

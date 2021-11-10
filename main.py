@@ -20,7 +20,7 @@ client = discord.Client()
 botChannelId = int(os.getenv('BOT_CHANNEL_ID'))
 GREEN = 0x27966b
 RED = 0xff3d3d
-STAT_UPDATER_PERIOD = 60
+STAT_UPDATER_PERIOD = 5
 
 def stripStringArray(stringArray):
     for i in range(len(stringArray)):

@@ -80,10 +80,12 @@ class LolStatUpdatorTask:
 
     def getSummonerMatchesData(self, matches, accountId):
         matches_stats = lolApiUtils.getMatchesStats(matches, accountId)
+        if len(matches_stats) == 0:
+            return None
         matches_merged_stat = lolStatsMerger.mergeGamesStats(matches_stats)
         result = {
             **matches_merged_stat,
-            'lastGameTimeStamp': matches[0]['timestamp'] + 1,
+            'lastGameTimeStamp': (matches_stats[0]['gameEndTimestamp'] / 1000) + 1,
             'accountId': accountId
         }
         return {'totalStatsResult': result, 'matchesStats': matches_stats}

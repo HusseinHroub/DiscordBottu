@@ -8,7 +8,7 @@ def mergeGamesStats(results):
     loses = 0
     sample_count = 0
     for result in results:
-        if result != None:
+        if result is not None:
             total_kills += result['kills']
             total_deaths += result['deaths']
             total_assists += result['assists']
