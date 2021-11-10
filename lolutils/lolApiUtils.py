@@ -11,7 +11,7 @@ region_v5 = 'europe'
 api_key = os.getenv('LAPIKEY')
 root_url = f'https://{region}.api.riotgames.com/lol'
 root_url_v5 = f'https://{region_v5}.api.riotgames.com/lol'
-CALLS_NUMBER = 80
+CALLS_NUMBER = 40
 CALLS_PERIOD = 120
 
 
