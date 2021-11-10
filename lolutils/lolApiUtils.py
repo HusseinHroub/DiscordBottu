@@ -59,8 +59,12 @@ def getStatsOfGameId(gameId, accountId):
     match_details = getJsonResponseOfUrl(f'{root_url_v5}/match/v5/matches/{gameId}?api_key={api_key}')
     particpantDetails = getParticipantObjectOfMatchDetails(match_details, accountId)
     if particpantDetails is not None:
+        print(match_details['info'])
         particpantDetails['queueId'] = match_details['info']['queueId']
-        particpantDetails['gameEndTimestamp'] = match_details['info']['gameEndTimestamp']
+        if('gameEndTimestamp' in match_details['info']):
+            particpantDetails['gameEndTimestamp'] = match_details['info']['gameEndTimestamp']
+        else:
+            particpantDetails['gameEndTimestamp'] = match_details['info']['gameStartTimestamp']
         return particpantDetails
     else:
         raise Exception(f'Error cloudnt find particpantId of gameId: {gameId}')
