@@ -60,10 +60,7 @@ def getStatsOfGameId(gameId, accountId):
     particpantDetails = getParticipantObjectOfMatchDetails(match_details, accountId)
     if particpantDetails is not None:
         particpantDetails['queueId'] = match_details['info']['queueId']
-        if('gameEndTimestamp' in match_details['info']):
-            particpantDetails['gameEndTimestamp'] = match_details['info']['gameEndTimestamp']
-        else:
-            particpantDetails['gameEndTimestamp'] = match_details['info']['gameStartTimestamp']
+        particpantDetails['gameEndTimestamp'] = match_details['info']['gameEndTimestamp']
         return particpantDetails
     else:
         raise Exception(f'Error cloudnt find particpantId of gameId: {gameId}')
