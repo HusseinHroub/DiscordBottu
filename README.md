@@ -3,7 +3,7 @@ This bot is used to track player statuses in league of legends game, and if a pl
 
 Sample commands that can be used by the bot:
 
-!ltop kills - Which return a sorted list of total kills recorded by the bot in previous games\n
+!ltop kills - Which return a sorted list of total kills recorded by the bot in previous games<br>
 !ltop assists - Which return a sorted list of total assists recorded by the bot in previous games
 !ltop kda - Which return a sorted list of average kda recorded by the bot in previous games
 !ltop farms
