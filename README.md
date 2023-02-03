@@ -12,4 +12,4 @@ The ability to share messages for great moments happened with players, some exam
 - When a player gets a penta kill, quadra, more than 19 kills, etc.., bot will announce this in the server<br>
 - When a player have a win streak, bot will announce this in the server
 
-Repo link: https://github.com/HusseinHroub/DiscordBottu
+Repo link: <a href='https://github.com/HusseinHroub/DiscordBottu'>https://github.com/HusseinHroub/DiscordBottu</a>
