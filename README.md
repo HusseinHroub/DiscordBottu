@@ -12,4 +12,4 @@ Commands:
 - !ltop assists - Returns a sorted list of total assists recorded by the bot in previous games.<br>
 - !ltop kda - Returns a sorted list of average KDA recorded by the bot in previous games.<br>
 
-Source Code: The source code for this bot is available on GitHub at https://github.com/HusseinHroub/DiscordBottu
+Source Code: The source code for this bot is available on GitHub at <a href="https://github.com/HusseinHroub/DiscordBottu">https://github.com/HusseinHroub/DiscordBottu</a>
