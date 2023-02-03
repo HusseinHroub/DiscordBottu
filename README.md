@@ -1,15 +1,17 @@
-# DiscordBot (league / valorant)
-This bot is used to track player statuses in <b>league of legends</b> / <b>valorant</b>, and if a player had good status, it will be posted in discord server<br>
+Project: DiscordBot for League of Legends / Valorant
 
-Sample commands that can be used by the bot:<br>
+Purpose: This bot is designed to track player statistics in League of Legends and Valorant and share notable achievements in a Discord server.
 
-<b>!ltop kills</b> - Which return a sorted list of players total kills recorded by the bot in previous games<br>
-<b>!ltop assists</b> - Which return a sorted list of players total assists recorded by the bot in previous games<br>
-<b>!ltop kda</b> - Which return a sorted list of players average kda recorded by the bot in previous games<br>
+Key Features:
 
-Extra features bot have:<br>
-The ability to share messages for great moments happened with players, some examples are:<br>
-- When a player gets a penta kill, quadra, more than 19 kills, etc.., bot will announce this in the server<br>
-- When a player have a win streak, bot will announce this in the server<br>
+Statistics Tracker: The bot can fetch and display player stats, including kills, deaths, assists, win rates, and KDA, from the League of Legends and Valorant APIs.
 
-Repo link: <a href='https://github.com/HusseinHroub/DiscordBottu'>https://github.com/HusseinHroub/DiscordBottu</a>
+Announcement of Great Moments: The bot can announce significant moments in-game, such as penta kills, win streaks, and high kill games, in the Discord server.
+
+Commands:
+
+- !ltop kills - Returns a sorted list of total kills recorded by the bot in previous games.<br>
+- !ltop assists - Returns a sorted list of total assists recorded by the bot in previous games.<br>
+- !ltop kda - Returns a sorted list of average KDA recorded by the bot in previous games.<br>
+
+Source Code: The source code for this bot is available on GitHub at https://github.com/HusseinHroub/DiscordBottu
