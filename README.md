@@ -12,3 +12,5 @@ Extra features bot have:
 The ability to share messages for great moments happened with players, some examples are:
 - When a player gets a penta kill, quadra, more than 19 kills, etc.., bot will announce this in the server
 - When a player have a win streak, bot will announce this in the server
+
+Repo link: https://github.com/HusseinHroub/DiscordBottu
