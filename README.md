@@ -8,8 +8,8 @@ Key Features:
 
 Commands:
 
-- !ltop kills - Returns a sorted list of total kills recorded by the bot in previous games.<br>
-- !ltop assists - Returns a sorted list of total assists recorded by the bot in previous games.<br>
-- !ltop kda - Returns a sorted list of average KDA recorded by the bot in previous games.<br>
+- !ltop kills - Returns a sorted list of players total kills recorded by the bot in previous games.<br>
+- !ltop assists - Returns a sorted list of players total assists recorded by the bot in previous games.<br>
+- !ltop kda - Returns a sorted list of players average KDA recorded by the bot in previous games.<br>
 
 Source Code: The source code for this bot is available on GitHub at <a href="https://github.com/HusseinHroub/DiscordBottu">https://github.com/HusseinHroub/DiscordBottu</a>
