@@ -1,5 +1,5 @@
 # DiscordBot (league / valorant)
-This bot is used to track player statuses in league of legends game, and if a player had good status, it will be posted in discord server<br>
+This bot is used to track player statuses in <b>league of legends</b> / <b>valorant game</b>, and if a player had good status, it will be posted in discord server<br>
 
 Sample commands that can be used by the bot:<br>
 
