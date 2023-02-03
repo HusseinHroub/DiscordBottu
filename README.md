@@ -3,9 +3,9 @@ This bot is used to track player statuses in <b>league of legends</b> / <b>valor
 
 Sample commands that can be used by the bot:<br>
 
-<b>!ltop kills</b> - Which return a sorted list of total kills recorded by the bot in previous games<br>
-<b>!ltop assists</b> - Which return a sorted list of total assists recorded by the bot in previous games<br>
-<b>!ltop kda</b> - Which return a sorted list of average kda recorded by the bot in previous games<br>
+<b>!ltop kills</b> - Which return a sorted list of players total kills recorded by the bot in previous games<br>
+<b>!ltop assists</b> - Which return a sorted list of players total assists recorded by the bot in previous games<br>
+<b>!ltop kda</b> - Which return a sorted list of players average kda recorded by the bot in previous games<br>
 
 Extra features bot have:<br>
 The ability to share messages for great moments happened with players, some examples are:<br>
