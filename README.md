@@ -6,9 +6,9 @@ Purpose: This bot is designed to track player statistics in League of Legends an
 
 <span style"color:red;"><b>You have the option to unregister at any time, which will cause the bot to cease tracking and sharing your stats within the Discord server (unregister link TO BE ADDED).</b></span><br>
 
-Key Features:
-- Statistics Tracker: The bot can fetch and display player stats, including kills, deaths, assists, win rates, and KDA, from the League of Legends and Valorant APIs.<br>
-- Announcement of Great Moments: The bot can announce significant moments in-game, such as penta kills, win streaks, and high kill games, in the Discord server.<br>
+<span style"color:green;">Key Features:</span>
+- <span style"color:green;">Statistics Tracker: The bot can fetch and display player stats, including kills, deaths, assists, win rates, and KDA, from the League of Legends and Valorant APIs.</span><br>
+- <span style"color:green;">Announcement of Great Moments: The bot can announce significant moments in-game, such as penta kills, win streaks, and high kill games, in the Discord server.</span><br>
 
 Commands:
 
