@@ -2,9 +2,9 @@ Project: DiscordBot for League of Legends / Valorant
 
 Purpose: This bot is designed to track player statistics in League of Legends and Valorant and share notable achievements in a Discord server.
 
-<span><b>To allow the bot to track your account, you must sign in with your RIOT ID and authorize the bot to monitor your status (register link TO BE ADDED).</b></span><br>
+<span style"color:red"><b>To allow the bot to track your account, you must sign in with your RIOT ID and authorize the bot to monitor your status (register link TO BE ADDED).</b></span><br>
 
-<span><b>You have the option to unregister at any time, which will cause the bot to cease tracking and sharing your stats within the Discord server (unregister link TO BE ADDED).</b></span><br>
+<span style"color:red"><b>You have the option to unregister at any time, which will cause the bot to cease tracking and sharing your stats within the Discord server (unregister link TO BE ADDED).</b></span><br>
 
 Key Features:
 - Statistics Tracker: The bot can fetch and display player stats, including kills, deaths, assists, win rates, and KDA, from the League of Legends and Valorant APIs.<br>
